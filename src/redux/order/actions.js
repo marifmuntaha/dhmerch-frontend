@@ -20,7 +20,7 @@ export const addOrder = (modal) => ({
     payload: {modal}
 })
 
-export const storeOrder = ({formData: {nama, whatsapp, produk, ukuran, warna, lengan, pembayaran}}) => ({
+export const storeOrder = ({formData: {nama, whatsapp, produk, ukuran, warna, lengan, pembayaran}}): any => ({
     type: OrderActionTypes.STORE_ORDER,
     payload: {nama, whatsapp, produk, ukuran, warna, lengan, pembayaran},
 })

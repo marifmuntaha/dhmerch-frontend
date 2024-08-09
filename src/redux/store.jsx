@@ -15,7 +15,7 @@ export const store = configureStore({
         order: Order
     },
 
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(middleware),
 })
 
 // run the saga

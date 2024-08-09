@@ -80,10 +80,6 @@ const Order = (state = INITIAL_STATE, action): any => {
             return {
                 ...state,
                 loading: false,
-                modal: {
-                    add: action.payload.modal,
-                    edit: false,
-                }
             }
         case OrderActionTypes.STORE_ORDER:
             return {

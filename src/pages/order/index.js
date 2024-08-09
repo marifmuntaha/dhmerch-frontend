@@ -11,7 +11,7 @@ import {
     RSelect
 } from "../../components";
 import Head from "../../layout/head";
-import {Alert, Card, Col, Form, Row} from "reactstrap";
+import {Alert, Card, Col, Form, Row, Spinner} from "reactstrap";
 import {Link, useNavigate} from "react-router-dom";
 import Logo from '../../assets/images/logo.png'
 import {useDispatch, useSelector} from "react-redux";
@@ -20,14 +20,14 @@ import {resetOrder, setOrder, storeOrder} from "../../redux/order/actions";
 
 const Order = () => {
     const dispatch = useDispatch();
-    const {order, success, error} = useSelector(state => state.order);
+    const {order, success, error, loading} = useSelector(state => state.order);
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [whatsapp, setWhatsapp] = useState('')
-    const [product, setProduct] = useState([]);
-    const [size, setSize] = useState([]);
-    const [color, setColor] = useState([]);
-    const [arm, setArm] = useState([]);
+    const [product, setProduct] = useState();
+    const [size, setSize] = useState();
+    const [color, setColor] = useState();
+    const [arm, setArm] = useState();
     const [payment, setPayment] = useState();
     const [price, setPrice] = useState()
     const [sizeOptions, setSizeOptions] = useState([]);
@@ -45,79 +45,79 @@ const Order = () => {
         switch (product) {
             case 1:
                 return [
-                    {value: 1, label: "0 - Panjang : 34 Lebar : 25"},
-                    {value: 2, label: "1 - Panjang : 42 Lebar : 32"},
-                    {value: 3, label: "2 - Panjang : 50 Lebar : 36"},
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 1, label: "0"},
+                    {value: 2, label: "1"},
+                    {value: 3, label: "2"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ];
             case 2:
                 return [
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ]
             case 3:
                 return [
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ]
             case 4:
                 return [
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ]
             case 5:
                 return [
                     {label: 'Anak-anak', options: [
-                            {value: 10, label: "0 - Panjang : 37 Lebar : 28"},
-                            {value: 11, label: "1 - Panjang : 43 Lebar : 32"},
-                            {value: 12, label: "2 - Panjang : 49 Lebar : 35"},
-                            {value: 13, label: "3 - Panjang : 55 Lebar : 38"},
-                            {value: 14, label: "XS - Panjang : 62 Lebar : 41"},
-                            {value: 15, label: "S - Panjang : 65 Lebar : 44"},
+                            {value: 10, label: "0"},
+                            {value: 11, label: "1"},
+                            {value: 12, label: "2"},
+                            {value: 13, label: "3"},
+                            {value: 14, label: "XS"},
+                            {value: 15, label: "S"},
                         ]},
                     {label: 'Dewasa', options: [
-                            {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                            {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                            {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                            {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                            {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                            {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                            {value: 4, label: "S"},
+                            {value: 5, label: "M"},
+                            {value: 6, label: "L"},
+                            {value: 7, label: "XL"},
+                            {value: 8, label: "XXL"},
+                            {value: 9, label: "XXXL"},
                         ]}
                 ]
             case 6:
                 return [
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ]
             case 7:
                 return [
-                    {value: 4, label: "S - Panjang : 55 Lebar : 38"},
-                    {value: 5, label: "M - Panjang : 65 Lebar : 44"},
-                    {value: 6, label: "L - Panjang : 69 Lebar : 50"},
-                    {value: 7, label: "XL - Panjang : 71 Lebar : 52"},
-                    {value: 8, label: "XXL - Panjang : 76 Lebar : 56"},
-                    {value: 9, label: "XXXL - Panjang : 77 Lebar : 67"},
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
                 ]
             default:
                 return [];
@@ -174,7 +174,7 @@ const Order = () => {
                 ukuran: size ? size.label : '',
                 warna: color ? color.label : '',
                 lengan: arm ? arm.label : '',
-                pembayaran: payment ? payment : '',
+                pembayaran: payment ? payment : {},
             }}))
     }
 
@@ -204,7 +204,7 @@ const Order = () => {
 
     useEffect(() => {
         dispatch(resetOrder());
-    }, dispatch)
+    }, [dispatch])
 
     useEffect(() => {
         success && dispatch(setOrder(order)) && navigate('/sukses')
@@ -230,10 +230,10 @@ const Order = () => {
                         </BlockContent>
                     </BlockHead>
                     <Form className="form-validate is-alter">
-                        {error && (
+                        {error && (typeof error === 'string') && (
                             <Alert className="alert-icon" color="danger">
                                 <Icon name="alert-circle" />
-                                <strong>Kesalahan</strong>. {error}
+                                <strong>Kesalahan</strong>.
                             </Alert>
                         )}
                         <div className="form-group">
@@ -288,25 +288,27 @@ const Order = () => {
                             </div>
                             <span>Gambar produk <Link to="/">lihat disini</Link></span>
                         </div>
-                        <div className="form-group">
-                            <div className="form-label-group">
-                                <label className="form-label" htmlFor="size">Ukuran</label>
-                            </div>
-                            <div className="form-control-wrap">
-                                <RSelect
-                                    options={sizeOptions}
-                                    value={size}
-                                    onChange={(val) => {
-                                        setArm([]);
-                                        setPrice([]);
-                                        setSize(val);
-                                    }}
-                                    placeholder="Pilih Ukuran"
-                                />
-                            </div>
-                        </div>
                         <Row className="gy-2">
-                            <Col className="col-md-6">
+                            <Col md="12" sm="6" lg="6">
+                                <div className="form-group">
+                                    <div className="form-label-group">
+                                        <label className="form-label" htmlFor="size">Ukuran</label>
+                                    </div>
+                                    <div className="form-control-wrap">
+                                        <RSelect
+                                            options={sizeOptions}
+                                            value={size}
+                                            onChange={(val) => {
+                                                setArm([]);
+                                                setPrice([]);
+                                                setSize(val);
+                                            }}
+                                            placeholder="Pilih Ukuran"
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col md="12" sm="6" lg="6">
                                 <div className="form-group">
                                     <div className="form-label-group">
                                         <label className="form-label" htmlFor="color">Warna</label>
@@ -321,7 +323,7 @@ const Order = () => {
                                     </div>
                                 </div>
                             </Col>
-                            <Col className="col-md-6">
+                            <Col md="12" sm="6" lg="12">
                                 <div className="form-group">
                                     <div className="form-label-group">
                                         <label className="form-label" htmlFor="arm">Lengan</label>
@@ -344,16 +346,16 @@ const Order = () => {
                             <>
                                 <Card className="mt-2 text-center p-3">
                                     <h4 className="text-danger">Harga: {price}</h4>
-                                    <p> Silahkan melakukan pembayaran melalui No. Rekening BRI.</p>
+                                    <p> Silahkan melakukan pembayaran melalui No. Rekening BRI. 5889 01 057293 53 6 a.n QOMARIYAH</p>
                                     <p> dan unggah bukti pembayaran disini.</p>
                                 </Card>
                             </>
                         )}
                         <div className="form-group mt-2">
-                            <label className="form-label" htmlFor="payment">Unggah bukti pembayaran</label>
+                            <label className="form-label" htmlFor="payment">Bukti Pembayaran</label>
                             <div className="form-control-wrap">
                                 <div className="form-file">
-                                    <input type="file" id="upload" className="form-control" onChange={(val) => {
+                                    <input type="file" id="upload" className="form-control" required={true} onChange={(val) => {
                                         setPayment(val.target.files[0]);
                                     }}/>
                                 </div>
@@ -361,7 +363,7 @@ const Order = () => {
                         </div>
                         <div className="form-group">
                             <Button size="lg" className="btn-block" type="submit" color="success" onClick={(e) => handleSubmit(e)}>
-                                KIRIM
+                                {loading ? <Spinner size="sm" color="light"/> : "KIRIM"}
                             </Button>
                         </div>
                     </Form>
