@@ -10,7 +10,8 @@ import Product4 from '../../assets/images/product/4.jpeg'
 import Product5 from '../../assets/images/product/5.jpeg'
 import Product6 from '../../assets/images/product/6.jpeg'
 import Product7 from '../../assets/images/product/7.jpeg'
-import Product8 from '../../assets/images/product/8.jpeg'
+import Product8 from '../../assets/images/product/8.jpg'
+import Product9 from '../../assets/images/product/9.jpg'
 import ImageContainer from "../../components/partials/galery/ImageContainer";
 import Logo from "../../assets/images/logo.png";
 
@@ -26,6 +27,13 @@ const Product = () => {
                 </Link>
             </div>
             <Row className="g-gs align-content-center">
+                <div className="form-group">
+                    <Button size="lg" className="btn-block" type="submit" color="success" onClick={() => {
+                        navigate('/order')
+                    }}>
+                        ORDER SEKARANG
+                    </Button>
+                </div>
                 <Col xxl={3} lg={4} sm={6}>
                     <Card className="gallery">
                         <ImageContainer img={Product1}/>
@@ -62,7 +70,7 @@ const Product = () => {
                     <Card className="gallery">
                         <ImageContainer img={Product5}/>
                         <div className="gallery-body card-inner align-center text-center flex-wrap g-2">
-                            <h5 className="text-center">KAOS MTSDHA EDISI 2024</h5>
+                            <h5 className="text-center">KAOS MATSDHA EDISI 2024</h5>
                         </div>
                     </Card>
                 </Col>
@@ -90,13 +98,14 @@ const Product = () => {
                         </div>
                     </Card>
                 </Col>
-                <div className="form-group">
-                    <Button size="lg" className="btn-block" type="submit" color="success" onClick={() => {
-                        navigate('/order')
-                    }}>
-                        ORDER SEKARANG
-                    </Button>
-                </div>
+                <Col xxl={3} lg={4} sm={6}>
+                    <Card className="gallery">
+                        <ImageContainer img={Product9}/>
+                        <div className="gallery-body card-inner align-center text-center flex-wrap g-2">
+                            <h5 className="text-center">KAOS PONPES DEHA EDISI 2024</h5>
+                        </div>
+                    </Card>
+                </Col>
             </Row>
         </Block>
     </>

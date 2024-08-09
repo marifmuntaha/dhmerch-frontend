@@ -37,9 +37,11 @@ const Order = () => {
         {value: 2, label: "KAOS TULANG PUNGGUNG"},
         {value: 3, label: "KAOS MADHA 2024"},
         {value: 4, label: "KAOS HARLAH 2024"},
-        {value: 5, label: "KAOS RA DARUL HIKMAH"},
-        {value: 6, label: "KAOS PONPES DARUL HIKMAH"},
-        {value: 7, label: "KAOS NGAJI NGOPI NGABDI"},
+        {value: 5, label: "KAOS MATSDHA 2024"},
+        {value: 6, label: "KAOS RA DARUL HIKMAH"},
+        {value: 7, label: "KAOS PONPES DARUL HIKMAH"},
+        {value: 8, label: "KAOS NGAJI NGOPI NGABDI"},
+        {value: 9, label: "KAOS PONPES DEHA 2024"},
     ]
     const handleOptionsize = (product) => {
         switch (product) {
@@ -84,6 +86,15 @@ const Order = () => {
                 ]
             case 5:
                 return [
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
+                ]
+            case 6:
+                return [
                     {label: 'Anak-anak', options: [
                             {value: 10, label: "0"},
                             {value: 11, label: "1"},
@@ -101,7 +112,7 @@ const Order = () => {
                             {value: 9, label: "XXXL"},
                         ]}
                 ]
-            case 6:
+            case 7:
                 return [
                     {value: 4, label: "S"},
                     {value: 5, label: "M"},
@@ -110,7 +121,16 @@ const Order = () => {
                     {value: 8, label: "XXL"},
                     {value: 9, label: "XXXL"},
                 ]
-            case 7:
+            case 8:
+                return [
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
+                ]
+            case 9:
                 return [
                     {value: 4, label: "S"},
                     {value: 5, label: "M"},
@@ -160,6 +180,10 @@ const Order = () => {
             case 8:
                 return [
                     {value: 11, label: 'Hitam'}
+                ]
+            case 9:
+                return [
+                    {value: 12, label: 'Biru Dongker'}
                 ]
             default:
                 return []
