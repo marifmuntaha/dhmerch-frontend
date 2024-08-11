@@ -42,6 +42,7 @@ const Order = () => {
         {value: 7, label: "KAOS PONPES DARUL HIKMAH"},
         {value: 8, label: "KAOS NGAJI NGOPI NGABDI"},
         {value: 9, label: "KAOS PONPES DEHA 2024"},
+        {value: 10, label: "KAOS MIDHA JEPARA"},
     ]
     const handleOptionsize = (product) => {
         switch (product) {
@@ -139,6 +140,15 @@ const Order = () => {
                     {value: 8, label: "XXL"},
                     {value: 9, label: "XXXL"},
                 ]
+            case 10:
+                return [
+                    {value: 4, label: "S"},
+                    {value: 5, label: "M"},
+                    {value: 6, label: "L"},
+                    {value: 7, label: "XL"},
+                    {value: 8, label: "XXL"},
+                    {value: 9, label: "XXXL"},
+                ]
             default:
                 return [];
         }
@@ -184,6 +194,11 @@ const Order = () => {
             case 9:
                 return [
                     {value: 12, label: 'Biru Dongker'}
+                ]
+            case 10:
+                return [
+                    {value: 7, label: 'Hitam'},
+                    {value: 8, label: 'Hijau Botol'},
                 ]
             default:
                 return []

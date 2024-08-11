@@ -12,6 +12,7 @@ import Product6 from '../../assets/images/product/6.jpeg'
 import Product7 from '../../assets/images/product/7.jpeg'
 import Product8 from '../../assets/images/product/8.jpg'
 import Product9 from '../../assets/images/product/9.jpg'
+import Product10 from '../../assets/images/product/10.jpg'
 import ImageContainer from "../../components/partials/galery/ImageContainer";
 import Logo from "../../assets/images/logo.png";
 
@@ -103,6 +104,14 @@ const Product = () => {
                         <ImageContainer img={Product9}/>
                         <div className="gallery-body card-inner align-center text-center flex-wrap g-2">
                             <h5 className="text-center">KAOS PONPES DEHA EDISI 2024</h5>
+                        </div>
+                    </Card>
+                </Col>
+                <Col xxl={3} lg={4} sm={6}>
+                    <Card className="gallery">
+                        <ImageContainer img={Product10}/>
+                        <div className="gallery-body card-inner align-center text-center flex-wrap g-2">
+                            <h5 className="text-center">KAOS MIDHA JEPARA</h5>
                         </div>
                     </Card>
                 </Col>

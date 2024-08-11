@@ -1,10 +1,7 @@
 import React, {useLayoutEffect} from "react";
-import {Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import LayoutNoSidebar from "../layout/NoSidebar"
-import {
-    // protectedRoutes,
-    publicRoutes} from ".";
-// import Layout from "../layout";
+import {publicRoutes} from ".";
 import {APICore} from "../utils/api/APICore";
 import {ToastContainer} from "react-toastify";
 
