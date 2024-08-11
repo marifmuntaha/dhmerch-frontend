@@ -142,6 +142,9 @@ const Order = () => {
                 ]
             case 10:
                 return [
+                    {value: 1, label: "0"},
+                    {value: 2, label: "1"},
+                    {value: 3, label: "2"},
                     {value: 4, label: "S"},
                     {value: 5, label: "M"},
                     {value: 6, label: "L"},
