@@ -173,3 +173,9 @@ export const role = (roleId) => {
             return "Pengunjung"
     }
 }
+
+export const formatterIDR = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+});

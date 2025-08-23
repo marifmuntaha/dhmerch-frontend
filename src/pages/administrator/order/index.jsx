@@ -9,14 +9,17 @@ import {
     BlockTitle,
     Button, Col,
     DataTableHead, DataTableItem, DataTableRow,
-    Icon, Row, TooltipComponent, RSelect
+    Icon, Row, TooltipComponent
 } from "../../../components";
 import {Badge, DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, UncontrolledDropdown} from "reactstrap";
-import {get as getOrder, store as storeOrder} from "../../../utils/api/order"
+import {get as getOrder, destroy as destroyOrder} from "../../../utils/api/order"
 import {useForm} from "react-hook-form";
+import {Add} from "./partial"
+import moment from "moment";
+import {formatterIDR} from "../../../utils";
 
 const Order = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const [dataRefresh, setDataRefresh] = useState(true);
     const [data, setData] = useState([]);
     const [onSearchText, setSearchText] = useState("");
     const [formData, setFormData] = useState({
@@ -33,7 +36,7 @@ const Order = () => {
         check: false,
     });
     const [smOption, setSmOption] = useState(false);
-    const [view, setView] = useState({ add: false, details: false})
+    const [modal, setModal] = useState({ add: false, details: false})
     const [currentPage, setCurrentPage] = useState(1);
     const [itemPerPage] = useState(7);
 
@@ -60,15 +63,10 @@ const Order = () => {
         setSearchText(e.target.value);
     };
     const onFormCancel = () => {
-        setView({ add: false, details: false });
+        setModal({ add: false, details: false });
         resetForm();
     };
-    const onFormSubmit = () => {
-        storeOrder(formData).then(() => {
-            setView({ add: false, details: false });
-            resetForm();
-        });
-    };
+
     const onSelectChange = (e, id) => {
         let newData = data;
         let index = newData.findIndex((item) => item.id === id);
@@ -112,15 +110,18 @@ const Order = () => {
         setData([...newData]);
     };
     const toggle = (type) => {
-        setView({
+        setModal({
             add: type === "add",
             details: type === "details",
         });
     };
 
     useEffect(() => {
-        getOrder().then((resp) => setData(resp));
-    }, []);
+        dataRefresh && getOrder().then((resp) => {
+            setData(resp);
+            setDataRefresh(false);
+        }).catch(() => setDataRefresh(false));
+    }, [dataRefresh]);
 
     useEffect(() => {
         let price = 0;
@@ -146,6 +147,7 @@ const Order = () => {
         }
         setFormData({...formData, price: price});
     }, [formData.size, formData.type, formData.arm, formData.payment]);
+
     return (
         <React.Fragment>
             <Head title="Pesanan" />
@@ -348,7 +350,7 @@ const Order = () => {
                                         </a>
                                     </DataTableRow>
                                     <DataTableRow size="md">
-                                        <span>{item.created_at}</span>
+                                        <span>{moment(item.created_at).format('D/MM/Y')}</span>
                                     </DataTableRow>
                                     <DataTableRow>
                                         <span className={`dot bg-${item.status === "2" ? "success" : "warning"} d-sm-none`}/>
@@ -358,7 +360,7 @@ const Order = () => {
                                                 item.status === "2" ? "success" : "warning"
                                             }
                                         >
-                                            {item.status === "2" ? 'Lunas' : 'Menunggu Pembayaran'}
+                                            {item.status === "2" ? 'PAID' : 'UNPAID'}
                                         </Badge>
                                     </DataTableRow>
                                     <DataTableRow size="sm">
@@ -368,7 +370,7 @@ const Order = () => {
                                         <span className="tb-sub text-primary">{item.payment === '2' ? 'VA' : 'CASH'}</span>
                                     </DataTableRow>
                                     <DataTableRow>
-                                        <span className="tb-lead">Rp. {item.price}</span>
+                                        <span className="tb-lead">{formatterIDR.format(item.price)}</span>
                                     </DataTableRow>
                                     <DataTableRow className="nk-tb-col-tools">
                                         <ul className="nk-tb-actions gx-1">
@@ -442,11 +444,13 @@ const Order = () => {
                                                                     href="#dropdown"
                                                                     onClick={(ev) => {
                                                                         ev.preventDefault();
-                                                                        deleteOrder(item.id);
+                                                                        destroyOrder(item.id).then(() => {
+                                                                            setDataRefresh(true);
+                                                                        })
                                                                     }}
                                                                 >
                                                                     <Icon name="trash"></Icon>
-                                                                    <span>Remove Order</span>
+                                                                    <span>Hapus Pesanan</span>
                                                                 </DropdownItem>
                                                             </li>
                                                         </ul>
@@ -460,180 +464,9 @@ const Order = () => {
                             : null}
                     </div>
                 </Block>
-                <Modal isOpen={view.add} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
-                    <ModalBody>
-                        <a href={"#cancel"} className="close">
-                            {" "}
-                            <Icon
-                                name="cross-sm"
-                                onClick={(ev) => {
-                                    ev.preventDefault();
-                                    onFormCancel();
-                                }}
-                            ></Icon>
-                        </a>
-                        <div className="p-2">
-                            <h5 className="title">Tambah Pesanan</h5>
-                            <div className="mt-4">
-                                <form onSubmit={handleSubmit(onFormSubmit)}>
-                                    <Row className="g-3">
-                                        <Col md="12">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="name">
-                                                    Nama Pemesan
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        {...register('name', {
-                                                            required: "Kolom tidak boleh kosong",
-                                                        })}
-                                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                        value={formData.name} />
-                                                    {errors.name && <span className="invalid">{errors.name.message}</span>}
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="6">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="phone">
-                                                    Nomor WA
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        {...register('phone', { required: "This is required" })}
-                                                        value={formData.phone}
-                                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-                                                    {errors.phone && <span className="invalid">{errors.phone.message}</span>}
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="6">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="address">
-                                                    Alamat
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        {...register('address', { required: "This is required" })}
-                                                        value={formData.address}
-                                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
-                                                    {errors.address && <span className="invalid">{errors.address.message}</span>}
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="4">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="type">
-                                                    Jenis
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <RSelect
-                                                        name="type"
-                                                        options={[
-                                                            { value: "Anak", label: "Anak" },
-                                                            { value: "Dewasa", label: "Dewasa" },
-                                                        ]}
-                                                        onChange={(e) => setFormData({ ...formData, type: e.value })}
-                                                        value={{value: formData.type, label: formData.type}}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="4">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="size">
-                                                    Ukuran
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <RSelect
-                                                        name="size"
-                                                        options={[
-                                                            { value: "XS", label: "XS" },
-                                                            { value: "S", label: "S" },
-                                                            { value: "M", label: "M" },
-                                                            { value: "L", label: "L" },
-                                                            { value: "XL", label: "XL" },
-                                                            { value: "XXL", label: "XXL" },
-                                                            { value: "3XL", label: "3XL" },
-                                                        ]}
-                                                        onChange={(e) => setFormData({ ...formData, size: e.value })}
-                                                        value={{value: formData.size, label: formData.size}}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="4">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="arm">
-                                                    Lengan
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <RSelect
-                                                        name="arm"
-                                                        options={[
-                                                            { value: "Pendek", label: "Pendek" },
-                                                            { value: "Panjang", label: "Panjang" },
-                                                        ]}
-                                                        onChange={(e) => setFormData({ ...formData, arm: e.value })}
-                                                        value={{value: formData.arm, label: formData.arm}}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="6">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="payment">
-                                                    Metode Pembayaran
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <RSelect
-                                                        name="payment"
-                                                        options={[
-                                                            { value: "1", label: "Cash" },
-                                                            { value: "2", label: "Virtual Account" },
-                                                        ]}
-                                                        onChange={(e) => setFormData({ ...formData, payment: e.value })}
-                                                        value={{value: formData.payment, label: formData.payment}}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col md="6">
-                                            <div className="form-group">
-                                                <label className="form-label" htmlFor="price">
-                                                    Total Pembayaran
-                                                </label>
-                                                <div className="form-control-wrap">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        {...register('price', { required: "This is required" })}
-                                                        value={formData.price}
-                                                        onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-                                                    {errors.price && <span className="invalid">{errors.price.message}</span>}
-                                                </div>
-                                            </div>
-                                        </Col>
-                                        <Col size="12">
-                                            <Button color="primary" type="submit">
-                                                <Icon className="plus"></Icon>
-                                                <span>Add Order</span>
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </form>
-                            </div>
-                        </div>
-                    </ModalBody>
-                </Modal>
+                <Add modal={modal} setModal={setModal} formData={formData} setFormData={setFormData} setDataRefresh={setDataRefresh}/>
 
-                <Modal isOpen={view.details} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
+                <Modal isOpen={modal.details} toggle={() => onFormCancel()} className="modal-dialog-centered" size="lg">
                     <ModalBody>
                         <a href={"#cancel"} className="close">
                             {" "}
