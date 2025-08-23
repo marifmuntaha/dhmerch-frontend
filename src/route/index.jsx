@@ -9,7 +9,8 @@ import Logout from "../pages/auth/logout";
 import Error404 from "../pages/error/Error-404";
 import ForgotPassword from "../pages/auth/forgot-password";
 import ResetPassword from "../pages/auth/reset-password";
-
+import {Dashboard as DashboardAdministrator} from "../pages/administrator/dashboard"
+import Order from "../pages/administrator/order";
 
 const Router = () => {
     const location = useLocation();
@@ -20,7 +21,8 @@ const Router = () => {
         <Routes>
             <Route element={<PrivateRoute/>}>
                 <Route path={process.env.PUBLIC_URL} element={<Layout/>}>
-                    <Route path="/administrator" element={<Dashboard/>} />
+                    <Route path="/administrator" element={<DashboardAdministrator/>} />
+                    <Route path="/administrator/pesanan" element={<Order/>} />
                 </Route>
             </Route>
             <Route path={process.env.PUBLIC_URL} element={<NoSidebar/>}>

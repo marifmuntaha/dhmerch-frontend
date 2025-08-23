@@ -1,109 +1,29 @@
 const administratorMenu = [
     {
-        icon: "monitor",
+        icon: "dashboard-fill",
         text: "Dashboard",
-        link: "/",
+        link: "/administrator",
     },
     {
-        icon: "archived",
-        text: "Master Data",
-        active: false,
-        subMenu: [
-            {
-                text: "Jenjang",
-                link: "/master-data/jenjang",
-            },
-            {
-                text: "Tingkat",
-                link: "/master-data/tingkat",
-            },
-            {
-                text: "Jurusan",
-                link: "/master-data/jurusan",
-            },
-            {
-                text: "Tahun Pelajaran",
-                link: "/master-data/tahun-pelajaran",
-            },
-        ],
+        icon: "bag-fill",
+        text: "Pesanan",
+        link: "/administrator/pesanan",
     },
     {
-        icon: "building",
-        text: "Data Lembaga",
-        active: false,
-        subMenu: [
-            {
-                text: "Daftar Lembaga",
-                link: "/data-lembaga",
-            },
-            {
-                text: "Program",
-                link: "/data-lembaga/program",
-            },
-            {
-                text: "Rombongan Belajar",
-                link: "/data-lembaga/rombongan-belajar",
-            },
-        ],
+        icon: "package-fill",
+        text: "Produk",
+        link: "/administrator/produk",
     },
     {
-        icon: "user-list",
-        text: "Data Siswa",
-        active: false,
-        subMenu: [
-            {
-                text: "Data Siswa",
-                link: "/data-siswa",
-            },
-            {
-                text: "Mutasi",
-                active: false,
-                subMenu: [
-                    {
-                        text: "Mutasi Keluar",
-                        link: "/data-siswa/mutasi/mutasi-keluar",
-                    },
-                    {
-                        text: "Mutasi Masuk",
-                        link: "/data-siswa/mutasi/mutasi-masuk",
-                    }
-                ]
-            },
-            {
-                text: "Akademik",
-                active: false,
-                subMenu: [
-                    {
-                        text: "Kenaikan Kelas",
-                        link: "/data-siswa/akademik/kenaikan-kelas",
-                    },
-                    {
-                        text: "Kelulusan",
-                        link: "/data-siswa/akademik/kelulusan",
-                    },
-                    {
-                        text: "Daftar Alumni",
-                        link: "/data-siswa/akademik/daftar-alumni",
-                    }
-                ]
-            }
-        ],
+        icon: "users-fill",
+        text: "Pelanggan",
+        link: "/administrator/pelanggan",
     },
     {
-        icon: "article",
-        text: "Rombongan Belajar",
-        link: "/rombongan-belajar",
-    },
-    {
-        icon: "list",
-        text: "Data Guru",
-        link: "/data-guru",
-    },
-    {
-        icon: "users",
-        text: "Data Pengguna",
-        link: "/data-pengguna",
-    },
+        icon: "opt-alt-fill",
+        text: "Pengaturan",
+        link: "/administrator/pengaturan",
+    }
 ]
 
 export default administratorMenu;
