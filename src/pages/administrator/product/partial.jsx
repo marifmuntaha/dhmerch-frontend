@@ -1,9 +1,21 @@
 import React, {useState} from "react";
-import {Button, Col, Icon, Row, RSelect} from "../../../components";
+import {
+    Block,
+    BlockDes,
+    BlockHead,
+    BlockHeadContent,
+    BlockTitle,
+    Button,
+    Col,
+    Icon,
+    Row,
+    RSelect
+} from "../../../components";
 import {Badge, Modal, ModalBody} from "reactstrap";
 import {store as storeOrder} from "../../../utils/api/order"
 import { store as storePayment } from "../../../utils/api/payment"
 import {formatterIDR} from "../../../utils";
+import SimpleBar from "simplebar-react";
 
 export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
     const [formData, setFormData] = useState({
@@ -20,11 +32,11 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
         payment: '',
         payCode: "",
         check: false,
-    })
-    const typeOptions = [
-        {value: 'Anak', label: 'Anak'},
-        {value: 'Dewasa', label: 'Dewasa'}
-    ]
+    });
+    const [colors, setColors] = useState([]);
+    const [color, setColor] = useState({value: '', label: ''});
+    const [sizes, setSizes] = useState([]);
+    const [size, setSize] = useState({value: '', label: '', price: '',})
     const sizeOptions = [
         { value: "XS", label: "XS" },
         { value: "S", label: "S" },
@@ -42,7 +54,7 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
         {value: '1', label: 'Tunai'},
         {value: '2', label: 'Virtual Account'},
     ]
-    const onFormSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (formData.payment === "2") {
             storePayment(formData).then((resp) => {
@@ -92,130 +104,204 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
     }
 
     return(
-        <Modal isOpen={modal.add} toggle={toggle} className="modal-dialog-centered" size="lg">
-            <ModalBody>
-                <div className="p-2">
-                    <h5 className="title">Tambah Produk</h5>
-                    <div className="mt-4">
-                        <form onSubmit={(e) => onFormSubmit(e)}>
-                            <Row className="g-3">
-                                <Col md="12">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
+        <React.Fragment>
+            <SimpleBar
+                className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${
+                    modal.add ? "content-active" : ""
+                }`}
+            >
+                <BlockHead>
+                    <BlockHeadContent>
+                        <BlockTitle tag="h5">Tambah Produk</BlockTitle>
+                        <BlockDes>
+                            <p>Add information or update product.</p>
+                        </BlockDes>
+                    </BlockHeadContent>
+                </BlockHead>
+                <Block>
+                    <form onSubmit={(e) => handleSubmit(e)}>
+                        <Row className="g-3">
+                            <Col size="12">
+                                <div className="form-group">
+                                    <div className="form-control-wrap">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={formData.name}
+                                            placeholder="Nama Produk"
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col size="12">
+                                <div className="form-group">
+                                    <div className="form-control-wrap">
+                                    <textarea
+                                        className="form-control"
+                                        value={formData.description}
+                                        placeholder="Diskripsi"
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col md="6">
+                                <div className="form-group">
+                                    <div className="form-control-wrap">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={formData.code}
+                                            placeholder="SKU Produk"
+                                            onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col md="6">
+                                <div className="form-group">
+                                    <div className="form-control-wrap">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={formData.price === 0 ? '' : formData.price}
+                                            placeholder="Harga"
+                                            onChange={(e) => {
+                                                setFormData({...formData, price: Number(e.target.value)})
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col md="12">
+                                <div className="form-group">
+                                    <label htmlFor="name">Warna</label>
+                                </div>
+                                <table className="table table-bordered">
+                                    <thead>
+                                    <tr className="text-center">
+                                        <td scope="col">Nilai</td>
+                                        <td scope="col">Label</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {colors.map((color, index) => (
+                                        <tr key={index} className="text-center">
+                                            <td>{color.value}</td>
+                                            <td>{color.label}</td>
+                                        </tr>
+                                    ))}
+                                    <tr className="text-center">
+                                        <td scope="col">
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                value={formData.name}
-                                                placeholder="Nama Pemesan"
+                                                name="value"
+                                                onChange={(e) => {
+                                                    setColor({...color, value: e.target.value})
+                                                }}
                                             />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
+                                        </td>
+                                        <td scope="col">
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={formData.code}
-                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                placeholder="SKU Produk"
+                                                name="label"
+                                                onChange={(e) => {
+                                                    setColor({...color, label: e.target.value})
+                                                }}
                                             />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </Col>
+                            <Col size="12">
+                                <Button color="danger" className="col-md-12 justify-center" type="submit" size="sm" onClick={() => {
+                                    setColors([...colors, color])
+                                    setColor({value: '', label: ''})
+                                }}>
+                                    <Icon name="plus"></Icon>
+                                    <span>Tambah</span>
+                                </Button>
+                            </Col>
+                            <Col md="12">
+                                <div className="form-group">
+                                    <label htmlFor="name">Ukuran</label>
+                                </div>
+                                <table className="table table-bordered">
+                                    <thead>
+                                    <tr className="text-center">
+                                        <td scope="col">Nilai</td>
+                                        <td scope="col">Label</td>
+                                        <td scope="col">Harga</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {sizes.map((size, index) => (
+                                        <tr key={index} className="text-center">
+                                            <td>{size.value}</td>
+                                            <td>{size.label}</td>
+                                            <td>{size.price}</td>
+                                        </tr>
+                                    ))}
+                                    <tr className="text-center">
+                                        <td scope="col">
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={formData.price}
-                                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                placeholder="Harga"
+                                                name="value"
+                                                onChange={(e) => {
+                                                    setColor({...size, value: e.target.value})
+                                                }}
                                             />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="4">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <RSelect
-                                                name="type"
-                                                options={typeOptions}
-                                                value={typeOptions.find((e) => e.value === formData.type)}
-                                                onChange={(e) => setFormData({ ...formData, type: e.value })}
-                                                placeholder="Pilih Jenis"
-                                            />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="4">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <RSelect
-                                                name="size"
-                                                options={sizeOptions}
-                                                onChange={(e) => setFormData({ ...formData, size: e.value })}
-                                                value={sizeOptions.find((e) => e.value === formData.size)}
-                                                placeholder="Pilih Ukuran"
-                                            />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="4">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <RSelect
-                                                name="arm"
-                                                options={armOptions}
-                                                onChange={(e) => setFormData({ ...formData, arm: e.value })}
-                                                value={armOptions.find((e) => e.value === formData.arm)}
-                                                placeholder="Pilih Lengan"
-                                            />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <RSelect
-                                                name="payment"
-                                                options={paymentOptions}
-                                                onChange={(e) => setFormData({ ...formData, payment: e.value })}
-                                                value={paymentOptions.find((e) => e.value === formData.payment)}
-                                                placeholder="Metode Pembayaran"
-                                            />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
+                                        </td>
+                                        <td scope="col">
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={formData.price}
-                                                onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                                                placeholder="Total Pembayaran"
-                                                disabled={true}
+                                                name="label"
+                                                onChange={(e) => {
+                                                    setColor({...size, label: e.target.value})
+                                                }}
                                             />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col size="12">
-                                    <Button color="primary" type="submit">
-                                        <Icon className="plus"></Icon>
-                                        <span>Simpan</span>
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </form>
-                    </div>
-                </div>
-            </ModalBody>
-        </Modal>
+                                        </td>
+                                        <td scope="col">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="price"
+                                                onChange={(e) => {
+                                                    setColor({...size, price: e.target.value})
+                                                }}
+                                            />
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </Col>
+                            <Col size="12">
+                                <Button color="danger" className="col-md-12 justify-center" type="submit" size="sm" onClick={() => {
+                                    setColors([...colors, color])
+                                    setColor({value: '', label: ''})
+                                }}>
+                                    <Icon name="plus"></Icon>
+                                    <span>Tambah</span>
+                                </Button>
+                            </Col>
+                            <Col size="12">
+                                <Button color="primary" type="submit">
+                                    <Icon name="save"></Icon>
+                                    <span>SIMPAN</span>
+                                </Button>
+                            </Col>
+                        </Row>
+                    </form>
+                </Block>
+            </SimpleBar>
+            {modal.add && <div className="toggle-overlay" onClick={toggle}></div>}
+        </React.Fragment>
     )
 }
 
