@@ -1,5 +1,6 @@
 import Button from "./button";
 import Icon from "./icon";
+import PaginationComponent from "./pagination";
 import RSelect from "./select";
 import RToast from "./toast";
 import TooltipComponent from "./tooltip";
@@ -15,7 +16,7 @@ import {
     DataTableTitle,
 } from "./table/DataTable";
 import {LinkItem, LinkList} from "./links";
-import {PreviewCard} from "./preview";
+import {PreviewAltCard, PreviewCard} from "./preview";
 
 export {
     Block,
@@ -33,6 +34,8 @@ export {
     Icon,
     LinkList,
     LinkItem,
+    PaginationComponent,
+    PreviewAltCard,
     PreviewCard,
     Row,
     RSelect,

@@ -1,10 +1,24 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Col, Icon, Row, RSelect} from "../../../components";
-import {Modal, ModalBody} from "reactstrap";
+import {Badge, Modal, ModalBody} from "reactstrap";
 import {useForm} from "react-hook-form";
 import {store as storeOrder} from "../../../utils/api/order"
+import {formatterIDR} from "../../../utils";
 
-export const Add = ({modal, setModal, formData, setFormData, setDataRefresh}) => {
+export const Add = ({modal, setModal, setDataRefresh}) => {
+    const [formData, setFormData] = useState({
+        id: null,
+        code: "",
+        name: "",
+        phone: "",
+        address: "",
+        type: "",
+        size: "",
+        arm: "",
+        price: 0,
+        payment: '',
+        check: false,
+    })
     const typeOptions = [
         {value: 'Anak', label: 'Anak'},
         {value: 'Dewasa', label: 'Dewasa'}
@@ -28,7 +42,7 @@ export const Add = ({modal, setModal, formData, setFormData, setDataRefresh}) =>
     ]
     const onFormSubmit = () => {
         storeOrder(formData).then(() => {
-            setModal({ add: false, details: false });
+            setModal({ add: false, detail: false });
             resetForm();
             setDataRefresh(true);
         });
@@ -50,7 +64,7 @@ export const Add = ({modal, setModal, formData, setFormData, setDataRefresh}) =>
     };
     const toggle = () => {
         resetForm();
-        setModal({add: false, details: false});
+        setModal({add: false, detail: false});
     }
 
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -187,6 +201,71 @@ export const Add = ({modal, setModal, formData, setFormData, setDataRefresh}) =>
                             </Row>
                         </form>
                     </div>
+                </div>
+            </ModalBody>
+        </Modal>
+    )
+}
+
+export const Detail = ({modal, setModal, order}) => {
+    const toggle = () => {
+        setModal({add: false, detail: false})
+    }
+    return (
+        <Modal isOpen={modal.detail} toggle={() => toggle()} className="modal-dialog-centered" size="lg">
+            <ModalBody>
+                <div className="nk-tnx-details mt-sm-3">
+                    <div className="nk-modal-head mb-3">
+                        <h5 className="title">Detail Pesanan</h5>
+                    </div>
+                    <Row className="gy-3">
+                        <Col lg={6}>
+                            <span className="sub-text">Nomor Pesanan</span>
+                            <span className="caption-text">{order?.code}</span>
+                        </Col>
+                        <Col lg={6}>
+                            <span className="sub-text">Status</span>
+                            <span className={`dot bg-${order?.status === "2" ? "success" : order?.status === "1" ? "warning" : "info"} d-sm-none`}></span>
+                            <Badge
+                                className="badge-sm badge-dot has-bg d-none d-sm-inline-flex"
+                                color={order?.status === "2" ? "success" : order?.status === "1" ? "warning" : "info"}
+                            >
+                                {order?.status === "2" ? "LUNAS" : order?.status === "1" ? "Menunggu Pembayaran" : "Telah diambil"}
+                            </Badge>
+                        </Col>
+                        <Col lg={6}>
+                            <span className="sub-text">Nama Pelanggan</span>
+                            <span className="caption-text">{order?.name}</span>
+                        </Col>
+                        <Col lg={6}>
+                            <span className="sub-text">Nama Produk</span>
+                            <span className="caption-text">{order?.productId}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Tipe</span>
+                            <span className="caption-text">{order?.type}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Ukuran</span>
+                            <span className="caption-text">{order?.size}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Lengan</span>
+                            <span className="caption-text">{order?.arm}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Harga</span>
+                            <span className="caption-text">{formatterIDR.format(order?.price)}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Metode Pembayaran</span>
+                            <span className="caption-text">{order?.payment}</span>
+                        </Col>
+                        <Col lg={4}>
+                            <span className="sub-text">Kode Bayar</span>
+                            <span className="caption-text">{order?.payCode}</span>
+                        </Col>
+                    </Row>
                 </div>
             </ModalBody>
         </Modal>
