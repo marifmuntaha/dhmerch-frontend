@@ -9,6 +9,11 @@ const administratorMenu = [
         text: "Pesanan",
         link: "/administrator/pesanan",
     },
+    {
+        icon: "package-fill",
+        text: "Produk",
+        link: "/administrator/produk",
+    },
     // {
     //     icon: "package-fill",
     //     text: "Produk",

@@ -77,6 +77,7 @@ class APICore {
             }
         }).catch((error) => {
             this.handleError(error)
+            return error
         })
     }
 

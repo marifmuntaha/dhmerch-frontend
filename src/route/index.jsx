@@ -11,6 +11,7 @@ import ForgotPassword from "../pages/auth/forgot-password";
 import ResetPassword from "../pages/auth/reset-password";
 import {Dashboard as DashboardAdministrator} from "../pages/administrator/dashboard"
 import Order from "../pages/administrator/order";
+import Product from "../pages/administrator/product";
 
 const Router = () => {
     const location = useLocation();
@@ -23,6 +24,7 @@ const Router = () => {
                 <Route path={process.env.PUBLIC_URL} element={<Layout/>}>
                     <Route path="/administrator" element={<DashboardAdministrator/>} />
                     <Route path="/administrator/pesanan" element={<Order/>} />
+                    <Route path="/administrator/produk" element={<Product/>} />
                 </Route>
             </Route>
             <Route path={process.env.PUBLIC_URL} element={<NoSidebar/>}>

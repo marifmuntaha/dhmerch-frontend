@@ -5,7 +5,7 @@ import {store as storeOrder} from "../../../utils/api/order"
 import { store as storePayment } from "../../../utils/api/payment"
 import {formatterIDR} from "../../../utils";
 
-export const Add = ({modal, setModal, setDataRefresh}) => {
+export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
     const [formData, setFormData] = useState({
         id: null,
         code: "",
@@ -95,7 +95,7 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
         <Modal isOpen={modal.add} toggle={toggle} className="modal-dialog-centered" size="lg">
             <ModalBody>
                 <div className="p-2">
-                    <h5 className="title">Tambah Pesanan</h5>
+                    <h5 className="title">Tambah Produk</h5>
                     <div className="mt-4">
                         <form onSubmit={(e) => onFormSubmit(e)}>
                             <Row className="g-3">
@@ -118,9 +118,9 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={formData.phone}
+                                                value={formData.code}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                placeholder="Nomor WA"
+                                                placeholder="SKU Produk"
                                             />
                                         </div>
                                     </div>
@@ -131,9 +131,9 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                value={formData.address}
+                                                value={formData.price}
                                                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                placeholder="Alamat"
+                                                placeholder="Harga"
                                             />
                                         </div>
                                     </div>

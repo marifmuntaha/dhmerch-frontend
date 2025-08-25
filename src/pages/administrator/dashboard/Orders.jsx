@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { Card } from "reactstrap";
 import { Icon } from "../../../components";
-import { get as getOrder } from "../../../utils/api/order"
 import { TotalOrderChart } from "../../../components/partials/charts/e-commerce/EcomCharts";
 import moment from "moment";
 import {calcPercentage} from "../../../utils";
 
-const Orders = () => {
-    const [orders, setOrders] = useState([]);
+const Orders = ({orders}) => {
     const [orderTotal, setOrderTotal] = useState(0);
     const [orderLastWeek, setOrderLastWeek] = useState(0)
     const [orderLast2Week, setOrderLast2Week] = useState(0)
@@ -24,26 +22,7 @@ const Orders = () => {
             "08 Jan",
             "09 Jan",
             "10 Jan",
-            "11 Jan",
-            "12 Jan",
-            "13 Jan",
-            "14 Jan",
-            "15 Jan",
-            "16 Jan",
-            "17 Jan",
-            "18 Jan",
-            "19 Jan",
-            "20 Jan",
-            "21 Jan",
-            "22 Jan",
-            "23 Jan",
-            "24 Jan",
-            "25 Jan",
-            "26 Jan",
-            "27 Jan",
-            "28 Jan",
-            "29 Jan",
-            "30 Jan",
+
         ],
         dataUnit: "Pesanan",
         lineTension: 0.3,
@@ -67,6 +46,48 @@ const Orders = () => {
             },
         ],
     })
+    const handleOrderData = (orders) => {
+        let days = [];
+        let daysRequired = 30
+
+        for (let i = 1; i <= daysRequired; i++) {
+            if(i===1) {
+                days.push( moment().format('D MMM') )
+            } else {
+                days.push( moment().add(-i, 'days').format('D MMM') )
+            }
+        }
+        const data = days.map((item) => {
+            const order = orders?.filter((order) => {
+                return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
+            })
+            return order?.length;
+        })
+        return {
+            labels: days.reverse(),
+            dataUnit: "Pesanan",
+            lineTension: 0.3,
+            datasets: [
+                {
+                    label: "Pesanan",
+                    borderColor: "#7de1f8",
+                    backgroundColor: "rgba(125, 225, 248, 0.25)",
+                    borderWidth: 2,
+                    fill:true,
+                    pointBorderColor: "transparent",
+                    pointBackgroundColor: "transparent",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "#7de1f8",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 4,
+                    data: [],
+                },
+            ],
+        }
+    }
 
     const handleDays = () => {
         let days = [];
@@ -83,52 +104,50 @@ const Orders = () => {
     }
 
     useEffect(() => {
-        getOrder().then((resp) => {
-            setOrders(resp);
-            setOrderTotal(resp.length);
-            const currentTime = moment().format('YYYY-MM-DD');
-            const lastWeek = moment().add(-7, 'days').format("YYYY-MM-DD");
-            const last2Week = moment().add(-14, 'days').format("YYYY-MM-DD");
-            const lastData = resp.filter((item) => {
-                return lastWeek <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= currentTime;
-            })
-            const last2Data = resp.filter((item) => {
-                return last2Week <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= lastWeek;
-            })
-            const lastWeekTotal = lastData.length;
-            const last2WeekTotal = last2Data.length;
-            const days = handleDays()
-            const data = days.map((item) => {
-                const order =  resp.filter((order) => {
-                    return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
-                })
-                return order.length;
-            })
-            console.log(data)
-            setOrderData({...orderData, labels: handleDays(), datasets: [
-                    {
-                        label: "Pesanan",
-                        borderColor: "#7de1f8",
-                        backgroundColor: "rgba(125, 225, 248, 0.25)",
-                        borderWidth: 2,
-                        fill:true,
-                        pointBorderColor: "transparent",
-                        pointBackgroundColor: "transparent",
-                        pointHoverBackgroundColor: "#fff",
-                        pointHoverBorderColor: "#7de1f8",
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 4,
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHitRadius: 4,
-                        data: data,
-                    },
-                ]})
-            setOrderLastWeek(lastWeekTotal);
-            setOrderLast2Week(last2WeekTotal);
-            setPercentGrow(calcPercentage(lastWeekTotal + last2WeekTotal, lastWeekTotal));
+        setOrderTotal(orders?.length);
+        const currentTime = moment().format('YYYY-MM-DD');
+        const lastWeek = moment().add(-7, 'days').format("YYYY-MM-DD");
+        const last2Week = moment().add(-14, 'days').format("YYYY-MM-DD");
+        const lastData = orders?.filter((item) => {
+            return lastWeek <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= currentTime;
         })
-    }, [])
+        const last2Data = orders?.filter((item) => {
+            return last2Week <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= lastWeek;
+        })
+        const lastWeekTotal = lastData?.length;
+        const last2WeekTotal = last2Data?.length;
+        const days = handleDays()
+        const data = days.map((item) => {
+            const order = orders?.filter((order) => {
+                return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
+            })
+            return order?.length;
+        })
+        setOrderData({
+            ...orderData, labels: handleDays(), datasets: [
+                {
+                    label: "Pesanan",
+                    borderColor: "#7de1f8",
+                    backgroundColor: "rgba(125, 225, 248, 0.25)",
+                    borderWidth: 2,
+                    fill: true,
+                    pointBorderColor: "transparent",
+                    pointBackgroundColor: "transparent",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "#7de1f8",
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 4,
+                    data: data,
+                },
+            ]
+        })
+        setOrderLastWeek(lastWeekTotal);
+        setOrderLast2Week(last2WeekTotal);
+        setPercentGrow(calcPercentage(lastWeekTotal + last2WeekTotal, lastWeekTotal));
+    }, [orders])
     return (
         <Card>
             <div className="nk-ecwg nk-ecwg3">
