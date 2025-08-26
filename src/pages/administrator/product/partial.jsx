@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Block,
     BlockDes,
@@ -16,7 +16,7 @@ import {store as storeProduct} from "../../../utils/api/product"
 import SimpleBar from "simplebar-react";
 import {numberFormat} from "../../../utils";
 
-export const FormInput = ({modal, setModal, product, setProduct, setDataRefresh}) => {
+export const Add = ({modal, setModal, setDataRefresh}) => {
     const [sizes, setSizes] = useState([]);
     const [size, setSize] = useState({value: '', label: '', price: ''});
     const [arms, setArms] = useState([]);
@@ -306,6 +306,128 @@ export const FormInput = ({modal, setModal, product, setProduct, setDataRefresh}
     )
 }
 
+export const Edit = ({modal, setModal, product, setDataRefresh}) => {
+    const [arms, setArms] = useState([]);
+    const [arm, setArm] = useState({
+        value: "",
+        label: "",
+        price: "",
+    })
+    const [image, setImage] = useState({});
+    const [sizes, setSizes] = useState([]);
+    const [size, setSize] = useState({
+        value: "",
+        label: "",
+        price: "",
+    })
+    const [formData, setFormData] = useState({
+        id: null,
+        sku: "",
+        name: "",
+        description: "",
+        price: "",
+        size: "",
+        arm: "",
+        file: {},
+        status: '',
+        check: false,
+    });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
+    const handleResetForm = () => {
+        setFormData({
+            id: null,
+            sku: "",
+            name: "",
+            description: "",
+            price: "",
+            size: "",
+            arm: "",
+            file: {},
+            status: undefined,
+            check: false,
+        });
+        setSizes([]);
+        setArms([]);
+        setImage({});
+    };
+    const toggle = () => {
+        handleResetForm();
+        setModal({add: false, edit: false, detail: false});
+    }
+
+    useEffect(() => {
+        setFormData(product)
+        setArms(JSON.parse(product.arm))
+        setSizes(JSON.parse(product.size))
+    }, [product]);
+    return (
+        <Modal isOpen={modal.edit} toggle={toggle} className="modal-dialog-centered" size="md">
+            <ModalBody>
+                <div className="p-2">
+                    <h5 className="title">Perbarui Produk</h5>
+                    <div className="mt-4">
+                        <form onSubmit={(e) => handleSubmit(e)}>
+                            <Row className="g-3">
+                                <Col size="12">
+                                    <div className="form-group">
+                                        <div className="form-control-wrap">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={formData.name}
+                                                placeholder="Nama Produk"
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md="6">
+                                    <div className="form-group">
+                                        <div className="form-control-wrap">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={formData.sku}
+                                                onChange={(e) => setFormData({ ...formData, sku: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md="6">
+                                    <div className="form-group">
+                                        <div className="form-control-wrap">
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                value={formData.price}
+                                                onChange={(e) => setFormData({ ...formData, price: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md="12">
+                                    <div className="form-group">
+                                        <div className="form-control-wrap">
+                                            <textarea
+                                                className="form-control"
+                                                value={formData.description}
+                                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}/>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col size="12">
+                                    <Button color="primary" type="submit">
+                                        <Icon name="plus"></Icon>
+                                        <span>Perbarui Produk</span>
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </form>
+                    </div>
+                </div>
+            </ModalBody>
+        </Modal>
+    )
+}
 export const Detail = ({modal, setModal, product}) => {
     const sizes = product.size && JSON.parse(product.size)
     const arms = product.arm && JSON.parse(product.arm)

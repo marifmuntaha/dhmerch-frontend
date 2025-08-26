@@ -19,7 +19,7 @@ import {
 import ProductH from "../../../images/product/h.png"
 import {Badge, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import {destroy as destroyProduct, update as updateProduct, get as getProduct} from "../../../utils/api/product"
-import {Detail, FormInput} from "./partial"
+import {Add, Detail, Edit} from "./partial"
 import {numberFormat} from "../../../utils";
 
 const Product = () => {
@@ -274,7 +274,7 @@ const Product = () => {
                                                 />
                                             </li>
                                             <li className="nk-tb-action-hidden" onClick={() => {
-                                                setProduct(item.id);
+                                                setProduct(item);
                                                 setModal({
                                                     add: false,
                                                     edit: true,
@@ -371,7 +371,8 @@ const Product = () => {
                         )}
                     </PreviewAltCard>
                 </Block>
-                <FormInput modal={modal} setModal={setModal} product={product} setProduct={setProduct} setDataRefresh={setDataRefresh} />
+                <Add modal={modal} setModal={setModal} setDataRefresh={setDataRefresh} />
+                <Edit modal={modal} setModal={setModal} product={product} setDataRefresh={setDataRefresh} />
                 <Detail modal={modal} setModal={setModal} product={product} />
             </Content>
         </React.Fragment>
