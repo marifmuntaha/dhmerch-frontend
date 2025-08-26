@@ -26,11 +26,11 @@ const Product = () => {
     const [dataRefresh, setDataRefresh] = useState(true);
     const [data, setData] = useState([]);
     const [products, setProducts] = useState([]);
-    const [product, setProduct] = useState({});
+    const [product, setProduct] = useState(false);
     const [onSearchText, setSearchText] = useState("");
     const [smOption, setSmOption] = useState(false);
     const [status, setStatus] = useState('');
-    const [modal, setModal] = useState({ add: false, detail: false});
+    const [modal, setModal] = useState({ formData: false, detail: false});
     const [currentPage, setCurrentPage] = useState(1);
     const [itemPerPage] = useState(10);
 
@@ -134,7 +134,7 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        add: true,
+                                                        formData: true,
                                                         detail: false
                                                     })
                                                 }}
@@ -146,7 +146,7 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        add: true,
+                                                        formData: true,
                                                         detail: false
                                                     })
                                                 }}
@@ -394,13 +394,12 @@ const Product = () => {
                             />
                         ) : (
                             <div className="text-center">
-                                <span className="text-silent">No orders found</span>
+                                <span className="text-silent">Produk tidak ditemukan</span>
                             </div>
                         )}
                     </PreviewAltCard>
                 </Block>
-                <Add modal={modal} setModal={setModal} setDataRefresh={setDataRefresh}/>
-                <Detail modal={modal} setModal={setModal} order={product} />
+                <Add modal={modal} setModal={setModal} product={product} setProduct={setProduct} setDataRefresh={setDataRefresh} />
             </Content>
         </React.Fragment>
     )
