@@ -16,24 +16,21 @@ import {store as storeProduct} from "../../../utils/api/product"
 import SimpleBar from "simplebar-react";
 import {numberFormat} from "../../../utils";
 
-export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
-    const [colors, setColors] = useState([]);
-    const [color, setColor] = useState({value: '', label: '',});
+export const FormInput = ({modal, setModal, product, setProduct, setDataRefresh}) => {
     const [sizes, setSizes] = useState([]);
     const [size, setSize] = useState({value: '', label: '', price: ''});
     const [arms, setArms] = useState([]);
     const [arm, setArm] = useState({value: "", label: "", price: ""});
-    const [images, setImages] = useState({});
+    const [image, setImage] = useState({});
     const [formData, setFormData] = useState({
         id: null,
         sku: "",
         name: "",
         description: "",
         price: "",
-        color: "",
         size: "",
         arm: "",
-        image: {},
+        file: {},
         status: '',
         check: false,
     })
@@ -44,30 +41,21 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (product === false) {
-            handleStore(formData)
-        }
-    };
-    const handleStore = (data) => {
         const params = {
-            sku: data.sku,
-            name: data.name,
-            description: data.description,
-            price: data.price,
-            color: JSON.stringify(colors),
+            sku: formData.sku,
+            name: formData.name,
+            description: formData.description,
+            price: formData.price,
             size: JSON.stringify(sizes),
             arm: JSON.stringify(arms),
-            image: images,
-            status: data.status,
+            file: image,
+            status: formData.status,
             check: false,
         }
         storeProduct(params).then(() => {
             setDataRefresh(true)
         });
-    }
-    const handleUpdate = (data) => {
-
-    }
+    };
     const handleResetForm = () => {
         setFormData({
             id: null,
@@ -75,34 +63,36 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
             name: "",
             description: "",
             price: "",
-            color: "",
             size: "",
             arm: "",
-            image: {},
-            status: '',
+            file: {},
+            status: undefined,
             check: false,
         });
+        setSizes([]);
+        setArms([]);
+        setImage({});
     };
     const toggle = () => {
         handleResetForm();
-        setModal({formData: false, detail: false});
+        setModal({add: false, edit: false, detail: false});
     }
 
     return (
         <React.Fragment>
             <SimpleBar
-                className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${modal.formData ? "content-active" : ""}`}>
+                className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${modal.add ? "content-active" : ""}`}>
                 <BlockHead>
                     <BlockHeadContent>
-                        <BlockTitle tag="h5">{product !== false ? "Ubah" : "Tambah"} Produk</BlockTitle>
+                        <BlockTitle tag="h5">Tambah Produk</BlockTitle>
                         <BlockDes>
-                            <p>Add information or update product.</p>
+                            <p>Tambahkan informasi atau perbarui produk.</p>
                         </BlockDes>
                     </BlockHeadContent>
                 </BlockHead>
                 <Block>
                     <form onSubmit={(e) => handleSubmit(e)}>
-                        <Row className="g-3">
+                        <Row className="g-2">
                             <Col size="12">
                                 <div className="form-group">
                                     <div className="form-control-wrap">
@@ -152,58 +142,6 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
                             </Col>
                             <Col size="12">
                                 <div className="form-group">
-                                    <label className="label fw-bold">Warna</label>
-                                    <table className="table table-bordered">
-                                        <thead>
-                                        <tr className="text-center">
-                                            <th>Nilai</th>
-                                            <th>Label</th>
-                                            <th>#</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {colors.map((color, idx) => (
-                                            <tr className="text-center" key={idx}>
-                                                <td>{color.value}</td>
-                                                <td>{color.label}</td>
-                                                <td>
-                                                    <Button color="danger" size="sm" outline
-                                                            onClick={() => setColors(colors.filter((item) => {
-                                                                return item.value !== color.value
-                                                            }))}>
-                                                        <Icon name="trash" color="danger"></Icon>
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        <tr className="text-center">
-                                            <td>
-                                                <input type="text" className="form-control text-center" size="sm"
-                                                       value={color.value}
-                                                       onChange={(e) => setColor({...color, value: e.target.value})}/>
-                                            </td>
-                                            <td>
-                                                <input type="text" className="form-control text-center" size="sm"
-                                                       value={color.label}
-                                                       onChange={(e) => setColor({...color, label: e.target.value})}/>
-                                            </td>
-                                            <td>
-                                                <Button color="primary" size="sm" outline
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            setColors([...colors, color]);
-                                                            setColor({value: '', label: ''});
-                                                        }}>
-                                                    <Icon name="save" color="danger"></Icon>
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Col>
-                            <Col size="12">
-                                <div className="form-group">
                                     <label className="label fw-bold">Ukuran</label>
                                     <table className="table table-bordered">
                                         <thead>
@@ -248,17 +186,17 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
                                             </td>
                                             <td>
                                                 <Button
-                                                color="primary"
-                                                size="sm"
-                                                outline
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setSizes([...sizes, size]);
-                                                    setSize({value: '', label: '', price: ''});
-                                                }}
-                                            >
-                                                <Icon name="save"></Icon>
-                                            </Button>
+                                                    color="primary"
+                                                    size="sm"
+                                                    outline
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setSizes([...sizes, size]);
+                                                        setSize({value: '', label: '', price: ''});
+                                                    }}
+                                                >
+                                                    <Icon name="save"></Icon>
+                                                </Button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -337,9 +275,9 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
                                         <RSelect
                                             name="status"
                                             options={statusOptions}
-                                            value={statusOptions.find((item) => item.value === formData.status)}
+                                            value={formData.status !== undefined && statusOptions.find((item) => item.value === formData.status)}
                                             placeholder="Pilih Status"
-                                            onChange={(e) => setFormData({ ...formData, status: e.value })}
+                                            onChange={(e) => setFormData({...formData, status: e.value})}
                                         />
                                     </div>
                                 </div>
@@ -348,11 +286,7 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
                                 <div className="form-group">
                                     <div className="form-control-wrap">
                                         <div className="form-file">
-                                            <Input
-                                                type="file"
-                                                multiple
-                                                onChange={(e) => setImages(e.target.files)}
-                                            />
+                                            <Input type="file" onChange={(e) => setImage(e.target.files[0])}/>
                                         </div>
                                     </div>
                                 </div>
@@ -367,69 +301,57 @@ export const Add = ({modal, setModal, product, setProduct, setDataRefresh}) => {
                     </form>
                 </Block>
             </SimpleBar>
-            {modal.formData && <div className="toggle-overlay" onClick={toggle}></div>}
+            {modal.add && <div className="toggle-overlay" onClick={toggle}></div>}
         </React.Fragment>
     )
 }
 
-export const Detail = ({modal, setModal, order}) => {
+export const Detail = ({modal, setModal, product}) => {
+    const sizes = product.size && JSON.parse(product.size)
+    const arms = product.arm && JSON.parse(product.arm)
     const toggle = () => {
-        setModal({add: false, detail: false})
+        setModal({add: false, edit: false, detail: false})
     }
     return (
-        <Modal isOpen={modal.detail} toggle={() => toggle()} className="modal-dialog-centered" size="lg">
+        <Modal isOpen={modal.detail} toggle={toggle} className="modal-dialog-centered" size="lg">
             <ModalBody>
+                <div className="nk-modal-head">
+                    <h4 className="nk-modal-title title">
+                        Product <small className="text-primary">#{product.sku}</small>
+                    </h4>
+                    <img src={product.image} alt=""/>
+                </div>
                 <div className="nk-tnx-details mt-sm-3">
-                    <div className="nk-modal-head mb-3">
-                        <h5 className="title">Detail Pesanan</h5>
-                    </div>
                     <Row className="gy-3">
                         <Col lg={6}>
-                            <span className="sub-text">Nomor Pesanan</span>
-                            <span className="caption-text">{order?.code}</span>
-                        </Col>
-                        <Col lg={6}>
-                            <span className="sub-text">Status</span>
-                            <span
-                                className={`dot bg-${order?.status === "2" ? "success" : order?.status === "1" ? "warning" : "info"} d-sm-none`}></span>
-                            <Badge
-                                className="badge-sm badge-dot has-bg d-none d-sm-inline-flex"
-                                color={order?.status === "2" ? "success" : order?.status === "1" ? "warning" : "info"}
-                            >
-                                {order?.status === "2" ? "LUNAS" : order?.status === "1" ? "Menunggu Pembayaran" : "Telah diambil"}
-                            </Badge>
-                        </Col>
-                        <Col lg={6}>
-                            <span className="sub-text">Nama Pelanggan</span>
-                            <span className="caption-text">{order?.name}</span>
-                        </Col>
-                        <Col lg={6}>
                             <span className="sub-text">Nama Produk</span>
-                            <span className="caption-text">{order?.productId}</span>
+                            <span className="caption-text">{product.name}</span>
                         </Col>
-                        <Col lg={4}>
-                            <span className="sub-text">Tipe</span>
-                            <span className="caption-text">{order?.type}</span>
-                        </Col>
-                        <Col lg={4}>
-                            <span className="sub-text">Ukuran</span>
-                            <span className="caption-text">{order?.size}</span>
-                        </Col>
-                        <Col lg={4}>
-                            <span className="sub-text">Lengan</span>
-                            <span className="caption-text">{order?.arm}</span>
-                        </Col>
-                        <Col lg={4}>
+                        <Col lg={6}>
                             <span className="sub-text">Harga</span>
-                            <span className="caption-text">{numberFormat(order?.price)}</span>
+                            <span className="caption-text">{product.price}</span>
                         </Col>
-                        <Col lg={4}>
-                            <span className="sub-text">Metode Pembayaran</span>
-                            <span className="caption-text">{order?.payment}</span>
+                        <Col lg={6}>
+                            <span className="sub-text">Ukuran</span>
+                            <span className="caption-text">
+                                {sizes && sizes.map(size => (
+                                    <Badge className="me-1" color="info">{size.label}</Badge>
+                                ))}
+                            </span>
                         </Col>
-                        <Col lg={4}>
-                            <span className="sub-text">Kode Bayar</span>
-                            <span className="caption-text">{order?.payCode}</span>
+                        <Col lg={6}>
+                            <span className="sub-text">Lengan</span>
+                            <span className="caption-text">
+                                {arms && arms.map(arm => (
+                                    <Badge className="me-1" color="warning">{arm.label}</Badge>
+                                ))}
+                            </span>
+                        </Col>
+                        <Col lg={6}>
+                            <span className="sub-text">Stok</span>
+                            <span className="caption-text"> {product.status === '1' ? (
+                                <Badge className="me-1" color="success">In Stock</Badge>
+                            ) : <Badge className="me-1" color="danger">Out Stock</Badge>}</span>
                         </Col>
                     </Row>
                 </div>

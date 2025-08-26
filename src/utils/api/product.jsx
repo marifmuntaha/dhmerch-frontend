@@ -16,8 +16,8 @@ async function store(params) {
         const {message, result} = resp
         RToast(message, 'success');
         return result;
-    }).catch(() => {
-        throw new Error()
+    }).catch((error) => {
+        return error;
     });
 }
 

@@ -16,10 +16,10 @@ import {
     PreviewAltCard,
     TooltipComponent
 } from "../../../components";
+import ProductH from "../../../images/product/h.png"
 import {Badge, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import {destroy as destroyProduct, update as updateProduct, get as getProduct} from "../../../utils/api/product"
-import {Add, Detail} from "./partial"
-import moment from "moment";
+import {Detail, FormInput} from "./partial"
 import {numberFormat} from "../../../utils";
 
 const Product = () => {
@@ -29,8 +29,7 @@ const Product = () => {
     const [product, setProduct] = useState(false);
     const [onSearchText, setSearchText] = useState("");
     const [smOption, setSmOption] = useState(false);
-    const [status, setStatus] = useState('');
-    const [modal, setModal] = useState({ formData: false, detail: false});
+    const [modal, setModal] = useState({ add: false, edit: false, detail: false});
     const [currentPage, setCurrentPage] = useState(1);
     const [itemPerPage] = useState(10);
 
@@ -38,17 +37,6 @@ const Product = () => {
     const indexOfFirstItem = indexOfLastItem - itemPerPage;
     const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    const onFilterChange = (status) => {
-        if (status === "") {
-            setData([...products])
-        } else {
-            let newData = products.filter((item) => {
-                return item.status === status
-            })
-            setData([...newData]);
-        }
-    };
 
     const onSelectChange = (e, id) => {
         let newData = data;
@@ -134,7 +122,8 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        formData: true,
+                                                        add: true,
+                                                        edit: false,
                                                         detail: false
                                                     })
                                                 }}
@@ -146,7 +135,8 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        formData: true,
+                                                        add: true,
+                                                        edit: false,
                                                         detail: false
                                                     })
                                                 }}
@@ -236,58 +226,40 @@ const Product = () => {
                                             <label className="custom-control-label" htmlFor={item.id + "oId-all"}></label>
                                         </div>
                                     </DataTableRow>
-                                    <DataTableRow>
-                                        <a href={"#id"} onClick={(ev) => ev.preventDefault()}>
-                                            #{item.code}
-                                        </a>
+                                    <DataTableRow size="sm">
+                                        <span className="tb-product">
+                                            <img src={item.image ? item.image : ProductH} alt="product" className="thumb" />
+                                            <span className="title">{item.name}</span>
+                                        </span>
                                     </DataTableRow>
                                     <DataTableRow size="md">
-                                        <span>{moment(item.created_at).format('D/MM/Y')}</span>
+                                        <span>{item.description}</span>
+                                    </DataTableRow>
+                                    <DataTableRow size="sm">
+                                        <span className="tb-sub">{item.sku}</span>
                                     </DataTableRow>
                                     <DataTableRow>
-                                        <span className={`dot bg-${item.status === "2" ? "success" : item.status === "1" ? "warning" : "info"} d-sm-none`}/>
+                                        <span className={`dot bg-${item.status === "2" ? "danger" : "success"} d-sm-none`}/>
                                         <Badge
                                             className="badge-sm badge-dot has-bg d-none d-sm-inline-flex"
                                             color={
-                                                item.status === "2" ? "success" : item.status === "1" ? "warning" : "info"
-                                            }
+                                                item.status === "2" ? "danger" : "success"}
                                         >
-                                            {item.status === "2" ? 'PAID' : item.status === "1" ? 'UNPAID' : "TAKE"}
+                                            {item.status === "2" ? 'Out Stock' : "In Stock"}
                                         </Badge>
                                     </DataTableRow>
-                                    <DataTableRow size="sm">
-                                        <span className="tb-sub">{item.name}</span>
-                                    </DataTableRow>
                                     <DataTableRow size="md">
-                                        <span className="tb-sub text-primary">{item.payment === '2' ? 'VA' : 'Tunai'}</span>
-                                    </DataTableRow>
-                                    <DataTableRow>
                                         <span className="tb-lead">{numberFormat(item.price)}</span>
                                     </DataTableRow>
                                     <DataTableRow className="nk-tb-col-tools">
                                         <ul className="nk-tb-actions gx-1">
-                                            {item.status === "2" && (
-                                                <li className="nk-tb-action-hidden" onClick={() => {
-                                                    updateProduct({id: item.id, status: "3" }).then(() => {
-                                                        setDataRefresh(true);
-                                                    });
-                                                }}>
-                                                    <TooltipComponent
-                                                        tag="a"
-                                                        containerClassName="btn btn-trigger btn-icon"
-                                                        id={"delivery" + item.id}
-                                                        icon="check"
-                                                        direction="top"
-                                                        text="Tandai Diambil"
-                                                    />
-                                                </li>
-                                            )}
                                             <li
                                                 className="nk-tb-action-hidden"
                                                 onClick={() => {
-                                                    setProduct(item.id);
+                                                    setProduct(item);
                                                     setModal({
                                                         add: false,
+                                                        edit: false,
                                                         detail: true
                                                     })
                                                 }}
@@ -299,6 +271,23 @@ const Product = () => {
                                                     icon="eye"
                                                     direction="top"
                                                     text="Detail Pesanan"
+                                                />
+                                            </li>
+                                            <li className="nk-tb-action-hidden" onClick={() => {
+                                                setProduct(item.id);
+                                                setModal({
+                                                    add: false,
+                                                    edit: true,
+                                                    detail: false
+                                                })
+                                            }}>
+                                                <TooltipComponent
+                                                    tag="a"
+                                                    containerClassName="btn btn-trigger btn-icon"
+                                                    id={"delivery" + item.id}
+                                                    icon="edit"
+                                                    direction="top"
+                                                    text="Ubah Produk"
                                                 />
                                             </li>
                                             <li>
@@ -317,48 +306,31 @@ const Product = () => {
                                                                         setProduct(item);
                                                                         setModal({
                                                                             add: false,
+                                                                            edit: false,
                                                                             detail: true
                                                                         })
                                                                     }}
                                                                 >
                                                                     <Icon name="eye"></Icon>
-                                                                    <span>Detail Pesanan</span>
+                                                                    <span>Detail Produk</span>
                                                                 </DropdownItem>
                                                             </li>
-                                                            {item.status === "1" && (
-                                                                <li>
-                                                                    <DropdownItem
-                                                                        tag="a"
-                                                                        href="#dropdown"
-                                                                        onClick={(ev) => {
-                                                                            ev.preventDefault();
-                                                                            updateProduct({id: item.id, status: "2" }).then(() => {
-                                                                                setDataRefresh(true);
-                                                                            });
-                                                                        }}
-                                                                    >
-                                                                        <Icon name="money"></Icon>
-                                                                        <span>Tandai Lunas</span>
-                                                                    </DropdownItem>
-                                                                </li>
-                                                            )}
-                                                            {item.status === "2" && (
-                                                                <li>
-                                                                    <DropdownItem
-                                                                        tag="a"
-                                                                        href="#dropdown"
-                                                                        onClick={(ev) => {
-                                                                            ev.preventDefault();
-                                                                            updateProduct({id: item.id, status: "3" }).then(() => {
-                                                                                setDataRefresh(true);
-                                                                            });
-                                                                        }}
-                                                                    >
-                                                                        <Icon name="check"></Icon>
-                                                                        <span>Tandai Diambil</span>
-                                                                    </DropdownItem>
-                                                                </li>
-                                                            )}
+                                                            <li>
+                                                                <DropdownItem
+                                                                    tag="a"
+                                                                    href="#dropdown"
+                                                                    onClick={(ev) => {
+                                                                        ev.preventDefault();
+                                                                        updateProduct({id: item.id, status: "2" }).then(() => {
+                                                                            setDataRefresh(true);
+                                                                        });
+                                                                    }}
+                                                                >
+                                                                    <Icon name="edit"></Icon>
+
+                                                                    <span>Ubah Produk</span>
+                                                                </DropdownItem>
+                                                            </li>
                                                             <li>
                                                                 <DropdownItem
                                                                     tag="a"
@@ -371,7 +343,7 @@ const Product = () => {
                                                                     }}
                                                                 >
                                                                     <Icon name="trash"></Icon>
-                                                                    <span>Hapus Pesanan</span>
+                                                                    <span>Hapus Produk</span>
                                                                 </DropdownItem>
                                                             </li>
                                                         </ul>
@@ -399,7 +371,8 @@ const Product = () => {
                         )}
                     </PreviewAltCard>
                 </Block>
-                <Add modal={modal} setModal={setModal} product={product} setProduct={setProduct} setDataRefresh={setDataRefresh} />
+                <FormInput modal={modal} setModal={setModal} product={product} setProduct={setProduct} setDataRefresh={setDataRefresh} />
+                <Detail modal={modal} setModal={setModal} product={product} />
             </Content>
         </React.Fragment>
     )

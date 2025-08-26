@@ -134,7 +134,7 @@ class APICore {
             }
         }).catch((error) => {
             this.handleError(error)
-            throw new Error()
+            throw new Error(error)
         })
     }
 
