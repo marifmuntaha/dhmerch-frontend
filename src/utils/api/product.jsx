@@ -12,7 +12,7 @@ function get(params) {
 
 async function store(params) {
     const baseUrl = '/product'
-    return api.create(baseUrl, params).then((resp) => {
+    return api.createWithFile(baseUrl, params).then((resp) => {
         const {message, result} = resp
         RToast(message, 'success');
         return result;
