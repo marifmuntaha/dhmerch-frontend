@@ -6,11 +6,10 @@ const api = new APICore()
 export function store(params) {
     const baseUrl = '/payment/midtrans/create'
     return api.create(baseUrl, params).then((resp) => {
-        console.log(resp)
         const {message, result} = resp
         RToast(message, 'success');
         return result;
-    }).catch(() => {
-        throw new Error()
+    }).catch((error) => {
+        throw new Error(error)
     });
 }

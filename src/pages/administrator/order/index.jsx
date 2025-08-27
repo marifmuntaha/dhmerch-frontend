@@ -245,11 +245,14 @@ const Order = () => {
                             <DataTableRow size="sm">
                                 <span className="sub-text">Pelanggan</span>
                             </DataTableRow>
+                            <DataTableRow>
+                                <span className="sub-text">Total</span>
+                            </DataTableRow>
                             <DataTableRow size="md">
                                 <span className="sub-text">Pembayaran</span>
                             </DataTableRow>
                             <DataTableRow>
-                                <span className="sub-text">Total</span>
+                                <span className="sub-text">Kode Bayar</span>
                             </DataTableRow>
                             <DataTableRow className="nk-tb-col-tools">
                                 <ul className="nk-tb-actions gx-1 my-n1">
@@ -344,11 +347,14 @@ const Order = () => {
                                     <DataTableRow size="sm">
                                         <span className="tb-sub">{item.name}</span>
                                     </DataTableRow>
-                                    <DataTableRow size="md">
-                                        <span className="tb-sub text-primary">{item.payment === '2' ? 'VA' : 'Tunai'}</span>
-                                    </DataTableRow>
                                     <DataTableRow>
                                         <span className="tb-lead">{formatterIDR.format(item.price)}</span>
+                                    </DataTableRow>
+                                    <DataTableRow size="md">
+                                        <span className="tb-sub text-primary">{item.payment === '2' ? 'BRIVA' : 'Tunai'}</span>
+                                    </DataTableRow>
+                                    <DataTableRow size="md">
+                                        <span className="tb-sub text-primary">{item.payCode}</span>
                                     </DataTableRow>
                                     <DataTableRow className="nk-tb-col-tools">
                                         <ul className="nk-tb-actions gx-1">
@@ -371,7 +377,7 @@ const Order = () => {
                                             <li
                                                 className="nk-tb-action-hidden"
                                                 onClick={() => {
-                                                    setOrder(item.id);
+                                                    setOrder(item);
                                                     setModal({
                                                         add: false,
                                                         detail: true
@@ -486,7 +492,7 @@ const Order = () => {
                     </PreviewAltCard>
                 </Block>
                 <Add modal={modal} setModal={setModal} setDataRefresh={setDataRefresh}/>
-                <Detail modal={modal} setModal={setModal} order={order} />
+                <Detail modal={modal} setModal={setModal} order={order} setOrder={setOrder}/>
             </Content>
         </React.Fragment>
     )

@@ -1,11 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Col, Icon, Row, RSelect} from "../../../components";
 import {Badge, Modal, ModalBody} from "reactstrap";
+import {get as getProduct} from "../../../utils/api/product"
 import {store as storeOrder} from "../../../utils/api/order"
-import { store as storePayment } from "../../../utils/api/payment"
+import {store as storePayment} from "../../../utils/api/payment"
 import {formatterIDR} from "../../../utils";
+import moment from "moment";
 
 export const Add = ({modal, setModal, setDataRefresh}) => {
+    const [products, setProducts] = useState([]);
+    const [productOptions, setProductOptions] = useState([]);
+    const [sizeOptions, setSizeOptions] = useState([])
+    const [armOptions, setArmOptions] = useState([]);
     const [formData, setFormData] = useState({
         id: null,
         code: "",
@@ -21,53 +27,64 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
         payCode: "",
         check: false,
     })
-    const typeOptions = [
-        {value: 'Anak', label: 'Anak'},
-        {value: 'Dewasa', label: 'Dewasa'}
-    ]
-    const sizeOptions = [
-        { value: "XS", label: "XS" },
-        { value: "S", label: "S" },
-        { value: "M", label: "M" },
-        { value: "L", label: "L" },
-        { value: "XL", label: "XL" },
-        { value: "XXL", label: "XXL" },
-        { value: "3XL", label: "3XL" },
-    ]
-    const armOptions = [
-        {value: 'Pendek', label: 'Pendek'},
-        {value: 'Panjang', label: 'Panjang'},
-    ]
+    const [priceProduct, setPriceProduct] = useState(0);
+    const [priceSize, setPriceSize] = useState(0);
+    const [priceArm, setPriceArm] = useState(0)
+    const [pricePayment, setPricePayment] = useState(0)
     const paymentOptions = [
-        {value: '1', label: 'Tunai'},
-        {value: '2', label: 'Virtual Account'},
+        {value: '1', label: 'Tunai', price: 0},
+        {value: '2', label: 'Virtual Account', price: 4250},
     ]
-    const onFormSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (formData.payment === "2") {
-            storePayment(formData).then((resp) => {
-                const params = {
-                    code: formData.code,
+            const paramsPayment = {
+                code: moment().format("YYYYMMDDHHmmss"),
+                amount: formData.price,
+                name: formData.name,
+                phone: formData.phone,
+
+            }
+            storePayment(paramsPayment).then((resp) => {
+                const paramsOrder = {
+                    code: resp.order_id,
                     name: formData.name,
                     phone: formData.phone,
                     address: formData.address,
-                    productId: '',
-                    size: "",
-                    arm: "",
-                    price: 0,
-                    payment: '',
-                    payCode: "",
+                    productId: formData.productId,
+                    size: formData.size,
+                    arm: formData.arm,
+                    price: Number(formData.price) - 4250,
+                    payment: formData.payment,
+                    reference: resp.transaction_id,
+                    payCode: resp.va_numbers[0].va_number,
                     check: false,
                 }
-            }).catch((err) => {
-                console.log(err)
-            })
+                storeOrder(paramsOrder).then(() => {
+                    setDataRefresh(true);
+                    toggle();
+                });
+            });
+        } else {
+            const paramsOrder = {
+                code: moment().format("YYYYMMDDHHmmss"),
+                name: formData.name,
+                phone: formData.phone,
+                address: formData.address,
+                productId: formData.productId,
+                size: formData.size,
+                arm: formData.arm,
+                price: Number(formData.price),
+                payment: formData.payment,
+                reference: '',
+                payCode: '',
+                check: false,
+            }
+            storeOrder(paramsOrder).then(() => {
+                setDataRefresh(true);
+                toggle();
+            });
         }
-        // storeOrder(formData).then(() => {
-        //     setModal({ add: false, detail: false });
-        //     resetForm();
-        //     setDataRefresh(true);
-        // });
     };
     const resetForm = () => {
         setFormData({
@@ -91,13 +108,36 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
         setModal({add: false, detail: false});
     }
 
+    useEffect(() => {
+        getProduct().then((resp) => {
+            setProducts(resp);
+            setProductOptions(() => {
+                return resp.map((item) => {
+                    return {value: item.sku, label: item.sku, price: item.price};
+                })
+            })
+        });
+    }, []);
+
+    useEffect(() => {
+        const product = products.filter((item) => {
+            return item.sku === formData.productId;
+        }).pop()
+        setSizeOptions(product && JSON.parse(product.size))
+        setArmOptions(product && JSON.parse(product.arm))
+    }, [formData.productId]);
+
+    useEffect(() => {
+        setFormData({...formData, price: Number(priceProduct) + Number(priceSize) + Number(priceArm) + Number(pricePayment)});
+    }, [priceProduct, priceSize, priceArm, pricePayment]);
+
     return(
         <Modal isOpen={modal.add} toggle={toggle} className="modal-dialog-centered" size="lg">
             <ModalBody>
                 <div className="p-2">
                     <h5 className="title">Tambah Pesanan</h5>
                     <div className="mt-4">
-                        <form onSubmit={(e) => onFormSubmit(e)}>
+                        <form onSubmit={(e) => handleSubmit(e)}>
                             <Row className="g-3">
                                 <Col md="12">
                                     <div className="form-group">
@@ -143,10 +183,13 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                         <div className="form-control-wrap">
                                             <RSelect
                                                 name="type"
-                                                options={typeOptions}
-                                                value={typeOptions.find((e) => e.value === formData.type)}
-                                                onChange={(e) => setFormData({ ...formData, type: e.value })}
-                                                placeholder="Pilih Jenis"
+                                                options={productOptions}
+                                                value={productOptions?.find((e) => e.value === formData.productId)}
+                                                onChange={(e) => {
+                                                    setPriceProduct(e.price);
+                                                    setFormData({...formData, productId: e.label});
+                                                }}
+                                                placeholder="Pilih Produk"
                                             />
                                         </div>
                                     </div>
@@ -157,8 +200,14 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                             <RSelect
                                                 name="size"
                                                 options={sizeOptions}
-                                                onChange={(e) => setFormData({ ...formData, size: e.value })}
-                                                value={sizeOptions.find((e) => e.value === formData.size)}
+                                                value={sizeOptions?.find((e) => e.value === formData.size)}
+                                                onChange={(e) => {
+                                                    setPriceSize(e.price)
+                                                    setFormData({
+                                                        ...formData,
+                                                        size: e.value
+                                                    })
+                                                }}
                                                 placeholder="Pilih Ukuran"
                                             />
                                         </div>
@@ -170,8 +219,11 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                             <RSelect
                                                 name="arm"
                                                 options={armOptions}
-                                                onChange={(e) => setFormData({ ...formData, arm: e.value })}
-                                                value={armOptions.find((e) => e.value === formData.arm)}
+                                                onChange={(e) => {
+                                                    setPriceArm(e.price)
+                                                    setFormData({...formData, arm: e.value});
+                                                }}
+                                                value={armOptions?.find((e) => e.value === formData.arm)}
                                                 placeholder="Pilih Lengan"
                                             />
                                         </div>
@@ -183,7 +235,10 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                             <RSelect
                                                 name="payment"
                                                 options={paymentOptions}
-                                                onChange={(e) => setFormData({ ...formData, payment: e.value })}
+                                                onChange={(e) => {
+                                                    setPricePayment(e.price)
+                                                    setFormData({...formData, payment: e.value})
+                                                }}
                                                 value={paymentOptions.find((e) => e.value === formData.payment)}
                                                 placeholder="Metode Pembayaran"
                                             />
@@ -197,7 +252,6 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                                 type="text"
                                                 className="form-control"
                                                 value={formData.price}
-                                                onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                                                 placeholder="Total Pembayaran"
                                                 disabled={true}
                                             />
@@ -219,9 +273,10 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
     )
 }
 
-export const Detail = ({modal, setModal, order}) => {
+export const Detail = ({modal, setModal, order, setOrder}) => {
     const toggle = () => {
         setModal({add: false, detail: false})
+        setOrder({});
     }
     return (
         <Modal isOpen={modal.detail} toggle={() => toggle()} className="modal-dialog-centered" size="lg">
@@ -254,10 +309,6 @@ export const Detail = ({modal, setModal, order}) => {
                             <span className="caption-text">{order?.productId}</span>
                         </Col>
                         <Col lg={4}>
-                            <span className="sub-text">Tipe</span>
-                            <span className="caption-text">{order?.type}</span>
-                        </Col>
-                        <Col lg={4}>
                             <span className="sub-text">Ukuran</span>
                             <span className="caption-text">{order?.size}</span>
                         </Col>
@@ -269,11 +320,11 @@ export const Detail = ({modal, setModal, order}) => {
                             <span className="sub-text">Harga</span>
                             <span className="caption-text">{formatterIDR.format(order?.price)}</span>
                         </Col>
-                        <Col lg={4}>
+                        <Col lg={6}>
                             <span className="sub-text">Metode Pembayaran</span>
-                            <span className="caption-text">{order?.payment}</span>
+                            <span className="caption-text">{order?.payment === '1' ? "CASH" : "BRIVA"}</span>
                         </Col>
-                        <Col lg={4}>
+                        <Col lg={6}>
                             <span className="sub-text">Kode Bayar</span>
                             <span className="caption-text">{order?.payCode}</span>
                         </Col>

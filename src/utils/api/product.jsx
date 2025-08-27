@@ -10,7 +10,7 @@ function get(params) {
     })
 }
 
-async function store(params) {
+function store(params) {
     const baseUrl = '/product'
     return api.createWithFile(baseUrl, params).then((resp) => {
         const {message, result} = resp
@@ -23,11 +23,11 @@ async function store(params) {
 
 function update(params) {
     const baseUrl = `/product/${params.id}`
-    return api.update(baseUrl, params).then((resp) => {
+    return api.updateWithFile(baseUrl, params).then((resp) => {
         const {message} = resp
         RToast(message, 'success');
-    }).catch(() => {
-        throw new Error()
+    }).catch((error) => {
+        return error;
     });
 }
 

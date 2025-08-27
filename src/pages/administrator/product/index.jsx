@@ -18,8 +18,8 @@ import {
 } from "../../../components";
 import ProductH from "../../../images/product/h.png"
 import {Badge, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
-import {destroy as destroyProduct, update as updateProduct, get as getProduct} from "../../../utils/api/product"
-import {Add, Detail, Edit} from "./partial"
+import {destroy as destroyProduct, get as getProduct} from "../../../utils/api/product"
+import {Detail, FormSubmit} from "./partial"
 import {numberFormat} from "../../../utils";
 
 const Product = () => {
@@ -29,22 +29,21 @@ const Product = () => {
     const [product, setProduct] = useState(false);
     const [onSearchText, setSearchText] = useState("");
     const [smOption, setSmOption] = useState(false);
-    const [modal, setModal] = useState({ add: false, edit: false, detail: false});
+    const [modal, setModal] = useState({ submit: false, detail: false});
     const [currentPage, setCurrentPage] = useState(1);
     const [itemPerPage] = useState(10);
 
     const indexOfLastItem = currentPage * itemPerPage;
     const indexOfFirstItem = indexOfLastItem - itemPerPage;
     const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const onSelectChange = (e, id) => {
         let newData = data;
         let index = newData.findIndex((item) => item.id === id);
         newData[index].check = e.currentTarget.checked;
         setData([...newData]);
     };
-
     const selectorCheck = (e) => {
         let newData;
         newData = data.map((item) => {
@@ -122,8 +121,7 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        add: true,
-                                                        edit: false,
+                                                        submit: true,
                                                         detail: false
                                                     })
                                                 }}
@@ -135,8 +133,7 @@ const Product = () => {
                                                 color="primary"
                                                 onClick={() => {
                                                     setModal({
-                                                        add: true,
-                                                        edit: false,
+                                                        submit: true,
                                                         detail: false
                                                     })
                                                 }}
@@ -258,8 +255,7 @@ const Product = () => {
                                                 onClick={() => {
                                                     setProduct(item);
                                                     setModal({
-                                                        add: false,
-                                                        edit: false,
+                                                        submit: false,
                                                         detail: true
                                                     })
                                                 }}
@@ -270,14 +266,13 @@ const Product = () => {
                                                     id={"view" + item.id}
                                                     icon="eye"
                                                     direction="top"
-                                                    text="Detail Pesanan"
+                                                    text="Detail Produk"
                                                 />
                                             </li>
                                             <li className="nk-tb-action-hidden" onClick={() => {
                                                 setProduct(item);
                                                 setModal({
-                                                    add: false,
-                                                    edit: true,
+                                                    submit: true,
                                                     detail: false
                                                 })
                                             }}>
@@ -305,8 +300,7 @@ const Product = () => {
                                                                         ev.preventDefault();
                                                                         setProduct(item);
                                                                         setModal({
-                                                                            add: false,
-                                                                            edit: false,
+                                                                            submit: false,
                                                                             detail: true
                                                                         })
                                                                     }}
@@ -321,9 +315,11 @@ const Product = () => {
                                                                     href="#dropdown"
                                                                     onClick={(ev) => {
                                                                         ev.preventDefault();
-                                                                        updateProduct({id: item.id, status: "2" }).then(() => {
-                                                                            setDataRefresh(true);
-                                                                        });
+                                                                        setProduct(item);
+                                                                        setModal({
+                                                                            submit: true,
+                                                                            detail: false
+                                                                        })
                                                                     }}
                                                                 >
                                                                     <Icon name="edit"></Icon>
@@ -371,8 +367,7 @@ const Product = () => {
                         )}
                     </PreviewAltCard>
                 </Block>
-                <Add modal={modal} setModal={setModal} setDataRefresh={setDataRefresh} />
-                <Edit modal={modal} setModal={setModal} product={product} setDataRefresh={setDataRefresh} />
+                <FormSubmit modal={modal} setModal={setModal} product={product} setProduct={setProduct} setDataRefresh={setDataRefresh} />
                 <Detail modal={modal} setModal={setModal} product={product} />
             </Content>
         </React.Fragment>

@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from "react";
+import SimpleBar from "simplebar-react";
+import {Badge, Input, Modal, ModalBody} from "reactstrap";
 import {
     Block,
     BlockDes,
@@ -11,12 +13,10 @@ import {
     Row,
     RSelect
 } from "../../../components";
-import {Badge, Input, Modal, ModalBody} from "reactstrap";
-import {store as storeProduct} from "../../../utils/api/product"
-import SimpleBar from "simplebar-react";
 import {numberFormat} from "../../../utils";
+import {store as storeProduct, update as updateProduct} from "../../../utils/api/product"
 
-export const Add = ({modal, setModal, setDataRefresh}) => {
+export const FormSubmit = ({modal, setModal, product, setProduct, setDataRefresh}) => {
     const [sizes, setSizes] = useState([]);
     const [size, setSize] = useState({value: '', label: '', price: ''});
     const [arms, setArms] = useState([]);
@@ -27,7 +27,7 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
         sku: "",
         name: "",
         description: "",
-        price: "",
+        price: 0,
         size: "",
         arm: "",
         file: {},
@@ -41,28 +41,54 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (product === false) {
+            handleStore(formData);
+        } else {
+            handleUpdate(formData);
+        }
+    };
+    const handleStore = (data) => {
         const params = {
-            sku: formData.sku,
-            name: formData.name,
-            description: formData.description,
-            price: formData.price,
+            sku: data.sku,
+            name: data.name,
+            description: data.description,
+            price: data.price,
             size: JSON.stringify(sizes),
             arm: JSON.stringify(arms),
             file: image,
-            status: formData.status,
+            status: data.status,
             check: false,
         }
         storeProduct(params).then(() => {
-            setDataRefresh(true)
+            toggle();
+            setDataRefresh(true);
         });
-    };
+    }
+    const handleUpdate = (data) => {
+        const params = {
+            id: data.id,
+            sku: data.sku,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            size: JSON.stringify(sizes),
+            arm: JSON.stringify(arms),
+            file: image,
+            status: data.status,
+            check: false,
+        }
+        updateProduct(params).then(() => {
+            toggle();
+            setDataRefresh(true);
+        })
+    }
     const handleResetForm = () => {
         setFormData({
             id: null,
             sku: "",
             name: "",
             description: "",
-            price: "",
+            price: 0,
             size: "",
             arm: "",
             file: {},
@@ -75,16 +101,25 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
     };
     const toggle = () => {
         handleResetForm();
-        setModal({add: false, edit: false, detail: false});
+        setModal({submit: false, detail: false});
+        setProduct(false);
     }
+
+    useEffect(() => {
+        if (product !== false) {
+            setFormData(product);
+            setSizes(JSON.parse(product.size));
+            setArms(JSON.parse(product.arm));
+        }
+    }, [product]);
 
     return (
         <React.Fragment>
             <SimpleBar
-                className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${modal.add ? "content-active" : ""}`}>
+                className={`nk-add-product toggle-slide toggle-slide-right toggle-screen-any ${modal.submit ? "content-active" : ""}`}>
                 <BlockHead>
                     <BlockHeadContent>
-                        <BlockTitle tag="h5">Tambah Produk</BlockTitle>
+                        <BlockTitle tag="h5">{product === false ? "Tambah" : "Ubah"} Produk</BlockTitle>
                         <BlockDes>
                             <p>Tambahkan informasi atau perbarui produk.</p>
                         </BlockDes>
@@ -123,9 +158,9 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                         <input
                                             type="number"
                                             className="form-control"
-                                            value={numberFormat(formData.price)}
+                                            value={formData.price}
                                             placeholder="Harga"
-                                            onChange={(e) => setFormData({...formData, price: e.target.value})}/>
+                                            onChange={(e) => setFormData({...formData, price: Number(e.target.value)})}/>
                                     </div>
                                 </div>
                             </Col>
@@ -153,7 +188,7 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {sizes.map((size, idx) => (
+                                        {sizes?.map((size, idx) => (
                                             <tr className="text-center" key={idx}>
                                                 <td>{size.value}</td>
                                                 <td>{size.label}</td>
@@ -170,14 +205,22 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                         ))}
                                         <tr className="text-center">
                                             <td>
-                                                <input type="text" className="form-control text-center" size="sm"
-                                                       value={size.value}
-                                                       onChange={(e) => setSize({...size, value: e.target.value})}/>
+                                                <input
+                                                    type="text"
+                                                    className="form-control text-center"
+                                                    size="sm"
+                                                    value={size.value}
+                                                    onChange={(e) => setSize({...size, value: e.target.value})}
+                                                />
                                             </td>
                                             <td>
-                                                <input type="text" className="form-control text-center" size="sm"
-                                                       value={size.label}
-                                                       onChange={(e) => setSize({...size, label: e.target.value})}/>
+                                                <input
+                                                    type="text"
+                                                    className="form-control text-center"
+                                                    size="sm"
+                                                    value={size.label}
+                                                    onChange={(e) => setSize({...size, label: e.target.value})}
+                                                />
                                             </td>
                                             <td>
                                                 <input type="text" className="form-control text-center" size="sm"
@@ -216,7 +259,7 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {arms.map((arm, idx) => (
+                                        {arms?.map((arm, idx) => (
                                             <tr className="text-center" key={idx}>
                                                 <td>{arm.value}</td>
                                                 <td>{arm.label}</td>
@@ -301,138 +344,16 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
                     </form>
                 </Block>
             </SimpleBar>
-            {modal.add && <div className="toggle-overlay" onClick={toggle}></div>}
+            {modal.submit && <div className="toggle-overlay" onClick={toggle}></div>}
         </React.Fragment>
     )
 }
 
-export const Edit = ({modal, setModal, product, setDataRefresh}) => {
-    const [arms, setArms] = useState([]);
-    const [arm, setArm] = useState({
-        value: "",
-        label: "",
-        price: "",
-    })
-    const [image, setImage] = useState({});
-    const [sizes, setSizes] = useState([]);
-    const [size, setSize] = useState({
-        value: "",
-        label: "",
-        price: "",
-    })
-    const [formData, setFormData] = useState({
-        id: null,
-        sku: "",
-        name: "",
-        description: "",
-        price: "",
-        size: "",
-        arm: "",
-        file: {},
-        status: '',
-        check: false,
-    });
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
-    const handleResetForm = () => {
-        setFormData({
-            id: null,
-            sku: "",
-            name: "",
-            description: "",
-            price: "",
-            size: "",
-            arm: "",
-            file: {},
-            status: undefined,
-            check: false,
-        });
-        setSizes([]);
-        setArms([]);
-        setImage({});
-    };
-    const toggle = () => {
-        handleResetForm();
-        setModal({add: false, edit: false, detail: false});
-    }
-
-    useEffect(() => {
-        setFormData(product)
-        setArms(JSON.parse(product.arm))
-        setSizes(JSON.parse(product.size))
-    }, [product]);
-    return (
-        <Modal isOpen={modal.edit} toggle={toggle} className="modal-dialog-centered" size="md">
-            <ModalBody>
-                <div className="p-2">
-                    <h5 className="title">Perbarui Produk</h5>
-                    <div className="mt-4">
-                        <form onSubmit={(e) => handleSubmit(e)}>
-                            <Row className="g-3">
-                                <Col size="12">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={formData.name}
-                                                placeholder="Nama Produk"
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={formData.sku}
-                                                onChange={(e) => setFormData({ ...formData, sku: e.target.value })}/>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="6">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                value={formData.price}
-                                                onChange={(e) => setFormData({ ...formData, price: e.target.value })}/>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md="12">
-                                    <div className="form-group">
-                                        <div className="form-control-wrap">
-                                            <textarea
-                                                className="form-control"
-                                                value={formData.description}
-                                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}/>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col size="12">
-                                    <Button color="primary" type="submit">
-                                        <Icon name="plus"></Icon>
-                                        <span>Perbarui Produk</span>
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </form>
-                    </div>
-                </div>
-            </ModalBody>
-        </Modal>
-    )
-}
 export const Detail = ({modal, setModal, product}) => {
-    const sizes = product.size && JSON.parse(product.size)
-    const arms = product.arm && JSON.parse(product.arm)
+    const sizes = product !== false ? JSON.parse(product.size) : []
+    const arms = product !== false ? JSON.parse(product.arm) : []
     const toggle = () => {
-        setModal({add: false, edit: false, detail: false})
+        setModal({submit: false, detail: false})
     }
     return (
         <Modal isOpen={modal.detail} toggle={toggle} className="modal-dialog-centered" size="lg">
@@ -456,7 +377,7 @@ export const Detail = ({modal, setModal, product}) => {
                         <Col lg={6}>
                             <span className="sub-text">Ukuran</span>
                             <span className="caption-text">
-                                {sizes && sizes.map(size => (
+                                {sizes.length > 0 && sizes.map((size) => (
                                     <Badge className="me-1" color="info">{size.label}</Badge>
                                 ))}
                             </span>
@@ -464,7 +385,7 @@ export const Detail = ({modal, setModal, product}) => {
                         <Col lg={6}>
                             <span className="sub-text">Lengan</span>
                             <span className="caption-text">
-                                {arms && arms.map(arm => (
+                                {arms && arms.map((arm) => (
                                     <Badge className="me-1" color="warning">{arm.label}</Badge>
                                 ))}
                             </span>
