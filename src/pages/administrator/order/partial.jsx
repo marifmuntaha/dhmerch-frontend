@@ -39,7 +39,7 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
         e.preventDefault();
         if (formData.payment === "2") {
             const paramsPayment = {
-                code: moment().format("YYYYMMDDHHmmss"),
+                productId: formData.productId,
                 amount: formData.price,
                 name: formData.name,
                 phone: formData.phone,

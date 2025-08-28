@@ -417,7 +417,7 @@ const Order = () => {
                                                                     <span>Detail Pesanan</span>
                                                                 </DropdownItem>
                                                             </li>
-                                                            {item.status === "1" && (
+                                                            {item.status === "1" && item.payment !== '2' && (
                                                                 <li>
                                                                     <DropdownItem
                                                                         tag="a"
