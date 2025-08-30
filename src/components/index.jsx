@@ -1,5 +1,6 @@
 import Button from "./button";
 import Icon from "./icon";
+import ImageContainer from "./gallery";
 import PaginationComponent from "./pagination";
 import RSelect from "./select";
 import RToast from "./toast";
@@ -31,6 +32,7 @@ export {
     DataTableHead,
     DataTableItem,
     DataTableRow,
+    ImageContainer,
     Icon,
     LinkList,
     LinkItem,

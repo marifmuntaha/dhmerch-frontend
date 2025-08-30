@@ -10,8 +10,9 @@ import Error404 from "../pages/error/Error-404";
 import ForgotPassword from "../pages/auth/forgot-password";
 import ResetPassword from "../pages/auth/reset-password";
 import {Dashboard as DashboardAdministrator} from "../pages/administrator/dashboard"
-import Order from "../pages/administrator/order";
+import {Order as OrderAdministrator} from "../pages/administrator/order";
 import Product from "../pages/administrator/product";
+import Order from "../pages/order";
 
 const Router = () => {
     const location = useLocation();
@@ -23,17 +24,17 @@ const Router = () => {
             <Route element={<PrivateRoute/>}>
                 <Route path={process.env.PUBLIC_URL} element={<Layout/>}>
                     <Route path="/administrator" element={<DashboardAdministrator/>} />
-                    <Route path="/administrator/pesanan" element={<Order/>} />
+                    <Route path="/administrator/pesanan" element={<OrderAdministrator/>} />
                     <Route path="/administrator/produk" element={<Product/>} />
                 </Route>
             </Route>
             <Route path={process.env.PUBLIC_URL} element={<NoSidebar/>}>
                 <Route index element={<Dashboard/>}/>
+                <Route path="/pesan/:sku" element={<Order/>}/>
                 <Route path="auth/masuk" element={<Login/>}/>
                 <Route path="auth/lupa-sandi" element={<ForgotPassword />}/>
                 <Route path="auth/reset-sandi/:token" element={<ResetPassword />}/>
                 <Route path="auth/keluar" element={<Logout/>}/>
-
                 <Route path="errors">
                     <Route path="404" element={<Error404 />}></Route>
                     {/*    <Route path="404-classic" element={<Error404Classic />}></Route>*/}
