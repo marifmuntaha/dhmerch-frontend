@@ -5,7 +5,7 @@ import { TotalOrderChart } from "../../../components/partials/charts/e-commerce/
 import moment from "moment";
 import {calcPercentage, numberFormat} from "../../../utils";
 
-const Paid = ({orders}) => {
+const Unpaid = ({orders}) => {
     const [orderTotal, setOrderTotal] = useState(0);
     const [orderLastWeek, setOrderLastWeek] = useState(0)
     const [orderLast2Week, setOrderLast2Week] = useState(0)
@@ -65,21 +65,21 @@ const Paid = ({orders}) => {
         const currentTime = moment().format('YYYY-MM-DD');
         const lastWeek = moment().add(-7, 'days').format("YYYY-MM-DD");
         const last2Week = moment().add(-14, 'days').format("YYYY-MM-DD");
-        const ordersPaid = orders.filter((order) => {
-            return order.status === "2" || order.status === "3";
+        const ordersUnpaid = orders.filter((order) => {
+            return order.status === "1"
         })
-        setOrderTotal(ordersPaid?.reduce((sum, item) => Number(sum) + Number(item.price), 0));
-        const lastData = ordersPaid?.filter((item) => {
+        setOrderTotal(ordersUnpaid?.reduce((sum, item) => Number(sum) + Number(item.price), 0));
+        const lastData = ordersUnpaid?.filter((item) => {
             return lastWeek <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= currentTime;
         })
-        const last2Data = ordersPaid?.filter((item) => {
+        const last2Data = ordersUnpaid?.filter((item) => {
             return last2Week <= moment(item.created_at).format('YYYY-MM-DD') && moment(item.created_at).format('YYYY-MM-DD') <= lastWeek;
         })
         const lastWeekTotal = lastData.reduce((sum, item) => Number(sum) + Number(item.price), 0);
         const last2WeekTotal = last2Data.reduce((sum, item) => Number(sum) + Number(item.price), 0);
         const days = handleDays()
         const data = days.map((item) => {
-            const order = ordersPaid?.filter((order) => {
+            const order = ordersUnpaid?.filter((order) => {
                 return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
             })
             return order?.reduce((sum, item) => Number(sum) + Number(item.price), 0);
@@ -88,14 +88,14 @@ const Paid = ({orders}) => {
             ...orderData, labels: handleDays(), datasets: [
                 {
                     label: "Pesanan",
-                    borderColor: "#4ffb49",
-                    backgroundColor: "rgba(134,241,152,0.25)",
+                    borderColor: "#f40707",
+                    backgroundColor: "rgba(243,24,24,0.25)",
                     borderWidth: 2,
                     fill: true,
                     pointBorderColor: "transparent",
                     pointBackgroundColor: "transparent",
                     pointHoverBackgroundColor: "#fff",
-                    pointHoverBorderColor: "#4ffb49",
+                    pointHoverBorderColor: "#f40707",
                     pointBorderWidth: 2,
                     pointHoverRadius: 4,
                     pointHoverBorderWidth: 2,
@@ -115,7 +115,7 @@ const Paid = ({orders}) => {
                 <div className="card-inner pb-0">
                     <div className="card-title-group">
                         <div className="card-title">
-                            <h6 className="title">Pesanan Lunas</h6>
+                            <h6 className="title">Pesanan Belum Lunas</h6>
                         </div>
                     </div>
                     <div className="data">
@@ -123,8 +123,8 @@ const Paid = ({orders}) => {
                             <div className="amount">{numberFormat(orderTotal)}</div>
                             <div className="info text-end">
                                 <span className={`text-info`}>
-                                    {orders?.filter((order) =>  {
-                                        return order.status === "2" || order.status === "3";
+                                    {orders.filter((order) => {
+                                        return order.status === "1"
                                     }).length}
                                 </span>
                                 <br />
@@ -140,4 +140,4 @@ const Paid = ({orders}) => {
         </Card>
     );
 };
-export default Paid;
+export default Unpaid;

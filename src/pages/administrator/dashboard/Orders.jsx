@@ -3,9 +3,9 @@ import { Card } from "reactstrap";
 import { Icon } from "../../../components";
 import { TotalOrderChart } from "../../../components/partials/charts/e-commerce/EcomCharts";
 import moment from "moment";
-import {calcPercentage} from "../../../utils";
+import {calcPercentage, numberFormat} from "../../../utils";
 
-const Orders = ({orders}) => {
+const Order = ({orders}) => {
     const [orderTotal, setOrderTotal] = useState(0);
     const [orderLastWeek, setOrderLastWeek] = useState(0)
     const [orderLast2Week, setOrderLast2Week] = useState(0)
@@ -46,48 +46,6 @@ const Orders = ({orders}) => {
             },
         ],
     })
-    const handleOrderData = (orders) => {
-        let days = [];
-        let daysRequired = 30
-
-        for (let i = 1; i <= daysRequired; i++) {
-            if(i===1) {
-                days.push( moment().format('D MMM') )
-            } else {
-                days.push( moment().add(-i, 'days').format('D MMM') )
-            }
-        }
-        const data = days.map((item) => {
-            const order = orders?.filter((order) => {
-                return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
-            })
-            return order?.length;
-        })
-        return {
-            labels: days.reverse(),
-            dataUnit: "Pesanan",
-            lineTension: 0.3,
-            datasets: [
-                {
-                    label: "Pesanan",
-                    borderColor: "#7de1f8",
-                    backgroundColor: "rgba(125, 225, 248, 0.25)",
-                    borderWidth: 2,
-                    fill:true,
-                    pointBorderColor: "transparent",
-                    pointBackgroundColor: "transparent",
-                    pointHoverBackgroundColor: "#fff",
-                    pointHoverBorderColor: "#7de1f8",
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 4,
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHitRadius: 4,
-                    data: [],
-                },
-            ],
-        }
-    }
 
     const handleDays = () => {
         let days = [];
@@ -104,7 +62,7 @@ const Orders = ({orders}) => {
     }
 
     useEffect(() => {
-        setOrderTotal(orders?.length);
+        setOrderTotal(orders?.reduce((sum, item) => Number(sum) + Number(item.price), 0));
         const currentTime = moment().format('YYYY-MM-DD');
         const lastWeek = moment().add(-7, 'days').format("YYYY-MM-DD");
         const last2Week = moment().add(-14, 'days').format("YYYY-MM-DD");
@@ -121,7 +79,7 @@ const Orders = ({orders}) => {
             const order = orders?.filter((order) => {
                 return moment(order.created_at).format('YYYY-MM-DD') === moment(item, 'DD MMM').format('YYYY-MM-DD');
             })
-            return order?.length;
+            return order?.reduce((sum, item) => Number(sum) + Number(item.price), 0);
         })
         setOrderData({
             ...orderData, labels: handleDays(), datasets: [
@@ -154,18 +112,16 @@ const Orders = ({orders}) => {
                 <div className="card-inner pb-0">
                     <div className="card-title-group">
                         <div className="card-title">
-                            <h6 className="title">Pesanan</h6>
+                            <h6 className="title">Total</h6>
                         </div>
                     </div>
                     <div className="data">
                         <div className="data-group">
-                            <div className="amount">{orderTotal}</div>
+                            <div className="amount">{numberFormat(orderTotal)}</div>
                             <div className="info text-end">
-                                <span className={`change ${orderLastWeek < orderLast2Week ? 'down' : 'up'} text-danger`}>
-                                    <Icon name="arrow-long-down"></Icon>{percentGrow}%
-                                </span>
+                                <span className={`text-info`}>{orders?.length}</span>
                                 <br />
-                                <span>vs. minggu lalu</span>
+                                <span>Pesanan</span>
                             </div>
                         </div>
                     </div>
@@ -177,4 +133,4 @@ const Orders = ({orders}) => {
         </Card>
     );
 };
-export default Orders;
+export default Order;

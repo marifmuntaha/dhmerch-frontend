@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import * as XLSX from 'xlsx';
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import {
@@ -84,6 +85,29 @@ const Order = () => {
         })
     };
 
+    const handleDownload = () => {
+        const dataExcel = data.map((item) => {
+            return {
+                'Kode Pesanan': item.code,
+                'Nama Pemesan': item.name,
+                'Nomor Whatsapp': item.phone,
+                'Alamat': item.address,
+                'SKU': item.productId,
+                'Ukuran': item.size,
+                'lengan': item.arm,
+                'harga': item.price,
+                'status': item.status === '1' ? 'Menunggu Pembayaran' : item.status === '2' ? 'Lunas' : 'Sudah diambil',
+                'Jenis Pembayaran': item.payment === '1' ? 'Tunai' : 'Virtual Akun',
+                'Nomor VA': item.payCode,
+            }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(dataExcel);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        XLSX.writeFile(workbook, "Data Pesanan.xlsx");
+    }
+
     useEffect(() => {
         dataRefresh && getOrder().then((resp) => {
             setData(resp);
@@ -151,7 +175,7 @@ const Order = () => {
                                                 <DropdownMenu end>
                                                     <ul className="link-list-opt no-bdr">
                                                         <li>
-                                                            <DropdownItem tag="a" href="#all" onClick={(e) => {
+                                                            <DropdownItem tag="a" href="#all" onClick={() => {
                                                                 onFilterChange('')
                                                                 setStatus('ALL')
                                                             }}>
@@ -159,7 +183,7 @@ const Order = () => {
                                                             </DropdownItem>
                                                         </li>
                                                         <li>
-                                                            <DropdownItem tag="a" href="#paid" onClick={(e) => {
+                                                            <DropdownItem tag="a" href="#paid" onClick={() => {
                                                                 onFilterChange('1')
                                                                 setStatus('PAID')
                                                             }}>
@@ -167,7 +191,7 @@ const Order = () => {
                                                             </DropdownItem>
                                                         </li>
                                                         <li>
-                                                            <DropdownItem tag="a" href="#unpaid" onClick={(e) => {
+                                                            <DropdownItem tag="a" href="#unpaid" onClick={() => {
                                                                 onFilterChange('2')
                                                                 setStatus('UNPAID')
                                                             }}>
@@ -175,7 +199,7 @@ const Order = () => {
                                                             </DropdownItem>
                                                         </li>
                                                         <li>
-                                                            <DropdownItem tag="a" href="#take" onClick={(e) => {
+                                                            <DropdownItem tag="a" href="#take" onClick={() => {
                                                                 onFilterChange('3')
                                                                 setStatus('TAKE')
                                                             }}>
@@ -211,6 +235,21 @@ const Order = () => {
                                             >
                                                 <Icon name="plus"></Icon>
                                                 <span>Tambah</span>
+                                            </Button>
+                                        </li>
+                                        <li className="nk-block-tools-opt">
+                                            <Button
+                                                className="toggle btn-icon d-md-none"
+                                                color="info"
+                                                onClick={() => handleDownload()}>
+                                                <Icon name="download"></Icon>
+                                            </Button>
+                                            <Button
+                                                className="toggle d-none d-md-inline-flex"
+                                                color="info"
+                                                onClick={() => handleDownload()}>
+                                                <Icon name="download"></Icon>
+                                                <span>Unduh</span>
                                             </Button>
                                         </li>
                                     </ul>

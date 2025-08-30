@@ -4,6 +4,10 @@ import Content from "../../../layout/content";
 import Orders from "./Orders";
 import {BlockBetween, BlockHead, BlockHeadContent, BlockTitle, Col, Row} from "../../../components";
 import { get as getOrder } from "../../../utils/api/order";
+import Paid from "./Paid";
+import Unpaid from "./Unpaid";
+import RecentOrders from "./RecentOrder";
+import TrafficSources from "./TrafficSources";
 
 export const Dashboard = () => {
     const [orders, setOrders] = useState([])
@@ -26,7 +30,16 @@ export const Dashboard = () => {
                         <Orders orders={orders} />
                     </Col>
                     <Col xxl="4" md="4">
-                        <Orders />
+                        <Paid orders={orders} />
+                    </Col>
+                    <Col xxl="4" md="4">
+                        <Unpaid orders={orders} />
+                    </Col>
+                    <Col xxl="6">
+                        <RecentOrders orders={orders} />
+                    </Col>
+                    <Col xxl="6" lg="6">
+                        <TrafficSources orders={orders}/>
                     </Col>
                 </Row>
             </Content>
