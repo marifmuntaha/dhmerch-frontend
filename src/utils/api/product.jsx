@@ -10,6 +10,13 @@ function get(params) {
     })
 }
 
+function getPublic(params) {
+    const baseUrl = '/public/product'
+    return api.get(baseUrl, params).then((resp) => {
+        return resp.result
+    })
+}
+
 function store(params) {
     const baseUrl = '/product'
     return api.createWithFile(baseUrl, params).then((resp) => {
@@ -41,4 +48,4 @@ function destroy(id) {
     });
 }
 
-export {get, store, update, destroy}
+export {get, getPublic, store, update, destroy}

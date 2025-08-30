@@ -37,9 +37,6 @@ const Router = () => {
                 <Route path="auth/keluar" element={<Logout/>}/>
                 <Route path="errors">
                     <Route path="404" element={<Error404 />}></Route>
-                    {/*    <Route path="404-classic" element={<Error404Classic />}></Route>*/}
-                    {/*    <Route path="504-modern" element={<Error504Modern />}></Route>*/}
-                    {/*    <Route path="504-classic" element={<Error504Classic />}></Route>*/}
                 </Route>
                 <Route path="*" element={<Error404 />}></Route>
 

@@ -3,6 +3,7 @@ import {RToast} from "../../components";
 
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.REACT_APP_API_KEY
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
 class APICore {
@@ -72,10 +73,11 @@ class APICore {
     create = (url, data) => {
         return axios.post(url, data).then((resp) => {
             return {
-                message: resp.data.message,
-                result: resp.data.result,
+                message: resp?.data?.message,
+                result: resp?.data?.result,
             }
         }).catch((error) => {
+            console.log(error)
             this.handleError(error)
         })
     }
@@ -191,8 +193,11 @@ class APICore {
     }
 
     setAuthorization = (auth) => {
-        if (auth) axios.defaults.headers.common['Authorization'] = 'Bearer ' + auth.token
-        else delete axios.defaults.headers.common['Authorization']
+        if (auth) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + auth.token
+        } else {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.REACT_APP_API_KEY
+        }
     }
 
     handleError(error) {

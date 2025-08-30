@@ -38,7 +38,7 @@ export const Dashboard = () => {
                     <Col xxl="6">
                         <RecentOrders orders={orders} />
                     </Col>
-                    <Col xxl="6" lg="6">
+                    <Col xxl="6" lg={12} md={6}>
                         <TrafficSources orders={orders}/>
                     </Col>
                 </Row>

@@ -13,3 +13,14 @@ export function store(params) {
         throw new Error(error)
     });
 }
+
+export function storePublic(params) {
+    const baseUrl = '/public/payment/midtrans/create'
+    return api.create(baseUrl, params).then((resp) => {
+        const {message, result} = resp
+        RToast(message, 'success');
+        return result;
+    }).catch((error) => {
+        throw new Error(error)
+    });
+}

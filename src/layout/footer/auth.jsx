@@ -11,24 +11,24 @@ const AuthFooter = () => {
                         <ul className="nav nav-sm justify-content-center justify-content-lg-end">
                             <li className="nav-item">
                                 <Link className="nav-link" target="_blank" to={`${process.env.PUBLIC_URL}/auths/terms`}>
-                                    Terms &amp; Condition
+                                    Syarat &amp; Kondisi
                                 </Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" target="_blank" to={`${process.env.PUBLIC_URL}/auths/terms`}>
-                                    Privacy Policy
+                                    Kebijakan Privasi
                                 </Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" target="_blank" to={`${process.env.PUBLIC_URL}/auths/faq`}>
-                                    Help
+                                    Bantuan
                                 </Link>
                             </li>
                         </ul>
                     </Col>
                     <Col lg="6">
                         <div className="nk-block-content text-center text-lg-start">
-                            <p className="text-soft">&copy; 2025 Dashlite. All Rights Reserved.</p>
+                            <p className="text-soft">&copy; 2023 DH Merch by <a href="https://darul-hikmah.sch.id">Yayasan Darul Hikmah Menganti</a></p>
                         </div>
                     </Col>
                 </Row>

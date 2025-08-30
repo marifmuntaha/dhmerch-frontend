@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { DropdownToggle, DropdownMenu, Dropdown } from "reactstrap";
 import {LinkList, LinkItem, UserAvatar} from "../../../../components";
 import { useTheme, useThemeUpdate } from "../../../provider/Theme";
-import {logout} from "../../../../utils/api/auth";
 import {APICore} from "../../../../utils/api/APICore";
 import {useNavigate} from "react-router-dom";
 import {role} from "../../../../utils";
+import {logout} from "../../../../utils/api/auth"
 
 const User = () => {
     const api = new APICore()
@@ -74,9 +74,9 @@ const User = () => {
                 </div>
                 <div className="dropdown-inner">
                     <LinkList>
-                        <LinkItem link="#" icon="signout" onClick={() => {
-                            logout({username: user.username}).then(() => {
-                                navigate("/");
+                        <LinkItem link={"#"} icon="signout" onClick={() => {
+                            logout().then(() => {
+                                navigate("/auth/keluar");
                             })
                         }}>Keluar</LinkItem>
                     </LinkList>

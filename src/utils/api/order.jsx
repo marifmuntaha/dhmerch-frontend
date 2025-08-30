@@ -21,6 +21,17 @@ async function store(params) {
     });
 }
 
+async function storePublic(params) {
+    const baseUrl = '/public/order'
+    return api.create(baseUrl, params).then((resp) => {
+        const {message, result} = resp
+        RToast(message, 'success');
+        return result;
+    }).catch((error) => {
+        throw new Error(error)
+    });
+}
+
 function update(params) {
     const baseUrl = `/order/${params.id}`
     return api.update(baseUrl, params).then((resp) => {
@@ -41,4 +52,4 @@ function destroy(id) {
     });
 }
 
-export {get, store, update, destroy}
+export {get, store, storePublic, update, destroy}

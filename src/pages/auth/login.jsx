@@ -26,7 +26,7 @@ const Login = () => {
     const onSubmit = (data) => {
         setLoading(true);
         login(data).then(() => {
-            navigate("/");
+            navigate("/administrator");
             setLoading(false);
         }).catch(() => setLoading(false));
     };

@@ -102,6 +102,10 @@ export const Add = ({modal, setModal, setDataRefresh}) => {
             payCode: "",
             check: false,
         });
+        setPriceProduct(0);
+        setPriceSize(0);
+        setPriceArm(0);
+        setPricePayment(0)
     };
     const toggle = () => {
         resetForm();

@@ -22,8 +22,8 @@ function logout() {
         RToast(message, 'success');
         api.setLoggedInUser();
         api.setAuthorization();
-    }).catch(() => {
-        throw new Error()
+    }).catch((error) => {
+        throw new Error(error);
     })
 }
 

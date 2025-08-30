@@ -4,7 +4,7 @@ import {Card, Col, Row} from "reactstrap";
 import {Link, useNavigate} from "react-router-dom";
 import Logo from "../../images/logo.png";
 import LogoDark from "../../images/logo-dark.png";
-import {get as getProduct} from "../../utils/api/product"
+import {getPublic as getProduct} from "../../utils/api/product"
 import {
     Block,
     BlockContent,

@@ -105,143 +105,143 @@ const TrafficSources = ({orders}) => {
                             <TrafficSourcesChart data={trafficSources} />
                         </div>
                         <ul className="nk-ecwg4-legends">
-                            <table className="table table-bordered">
+                            <table className="table table-bordered table-sm">
                                 <tbody>
                                 <tr>
-                                    <td rowSpan={2} className="align-middle">XS</td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>XS</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#fa4949" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[0]}</div></td>
-                                    <td rowSpan={2} className="align-middle">XL</td>
+                                    <td className="text-center"><div className="amount amount-xs">{data[0]}</div></td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>XL</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[8]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[8]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td style={{paddingLeft: 16}}>
+                                    <td style={{paddingLeft: 4}}>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#c50101" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[1]}</div></td>
+                                    <td className="text-center"><div className="amount amount-xs">{data[1]}</div></td>
                                     <td className="text-start">
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[9]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[9]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td rowSpan={2} className="align-middle">S</td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>S</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[2]}</div></td>
-                                    <td rowSpan={2} className="align-middle">2XL</td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[2]}</div></td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>2XL</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[10]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[10]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td style={{paddingLeft: 16}}>
+                                    <td style={{paddingLeft: 4}}>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[3]}</div></td>
+                                    <td className="text-center"><div className="amount amount-xs">{data[3]}</div></td>
                                     <td className="text-start">
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[11]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[11]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td rowSpan={2} className="align-middle">M</td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>M</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[4]}</div></td>
-                                    <td rowSpan={2} className="align-middle">3XL</td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[4]}</div></td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>3XL</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[12]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[12]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td style={{paddingLeft: 16}}>
+                                    <td style={{paddingLeft: 4}}>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[5]}</div></td>
+                                    <td className="text-center"><div className="amount amount-xs">{data[5]}</div></td>
                                     <td className="text-start">
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[13]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[13]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td rowSpan={2} className="align-middle">L</td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>L</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[6]}</div></td>
-                                    <td rowSpan={2} className="align-middle">4XL</td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[6]}</div></td>
+                                    <td rowSpan={2} className="align-middle" style={{padding: 0, textAlign: 'center'}}>4XL</td>
                                     <td>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#9cabff" }}></span>
                                             <span>Pendek</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[14]}</div></td>
+                                    <td className="text-center" style={{padding: 4}}><div className="amount amount-xs">{data[14]}</div></td>
                                 </tr>
                                 <tr>
-                                    <td style={{paddingLeft: 16}}>
+                                    <td style={{paddingLeft: 4}}>
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[7]}</div></td>
+                                    <td className="text-center"><div className="amount amount-xs">{data[7]}</div></td>
                                     <td className="text-start">
                                         <div className="title">
                                             <span className="dot dot-lg sq" style={{ background: "#ffa9ce" }}></span>
                                             <span>Panjang</span>
                                         </div>
                                     </td>
-                                    <td><div className="amount amount-xs">{data[15]}</div></td>
+                                    <td className="text-center"  style={{padding: 4}}><div className="amount amount-xs">{data[15]}</div></td>
                                 </tr>
                                 </tbody>
                             </table>

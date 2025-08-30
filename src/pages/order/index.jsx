@@ -17,10 +17,9 @@ import {
 } from "../../components";
 import {Form} from "reactstrap";
 import {useForm} from "react-hook-form";
-import {get as getProduct} from "../../utils/api/product"
-import {store as storePayment} from "../../utils/api/payment";
-import {store as storeOrder} from "../../utils/api/order";
-import moment from "moment/moment";
+import {getPublic as getProduct} from "../../utils/api/product"
+import {storePublic as storePayment} from "../../utils/api/payment";
+import {storePublic as storeOrder} from "../../utils/api/order";
 
 const Order = () => {
     const [formData, setFormData] = useState({
