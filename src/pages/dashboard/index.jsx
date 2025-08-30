@@ -19,7 +19,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     useEffect(() => {
         getProduct().then((resp) => {
-            setProducts(resp.reverse());
+            setProducts(resp);
         });
     }, [])
     return (
